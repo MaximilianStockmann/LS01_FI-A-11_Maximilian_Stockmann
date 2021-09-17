@@ -1,21 +1,23 @@
 public class Konsolenausgabe {
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         //Code für Aufgabe 1
-        System.out.print("\"Das ist ein Beispielsatz.\"\n");
-        System.out.println("Dies ist ein weiterer " +  "Beispielsatz.");
+        System.out.printf("%s", "\"Das ist ein Beispielsatz.\"\n");
+        System.out.printf("%s" + "%s" + "%s", "Dies ist ein ", "weiterer Beispielsatz.", "\n");
 
         //Das ist ein Kommentar
 
         //Code für Aufgabe 2
-        System.out.println("      *      ");
-        System.out.println("     ***     ");
-        System.out.println("    *****    ");
-        System.out.println("   *******   ");
-        System.out.println("  *********  ");
-        System.out.println(" *********** ");
-        System.out.println("*************");
-        System.out.println("     ***     ");
-        System.out.println("     ***     ");
+        String stars = "*************";
+
+        System.out.printf("%7.1s\n", stars);
+        System.out.printf("%8.3s\n", stars);
+        System.out.printf("%9.5s\n", stars);
+        System.out.printf("%10.7s\n", stars);
+        System.out.printf("%11.9s\n", stars);
+        System.out.printf("%12.11s\n", stars);
+        System.out.printf("%13.13s\n", stars);
+        System.out.printf("%8.3s\n", stars);
+        System.out.printf("%8.3s\n", stars);
 
         //Code für Aufgabe 3
         double zahl1 = 22.4234234;
