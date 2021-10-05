@@ -1,5 +1,7 @@
 package eingabeAusgabe;
 
+import java.net.StandardSocketOptions;
+
 /** Variablen.java
  Ergaenzen Sie nach jedem Kommentar jeweils den Quellcode.
  @author Maximlian Stockmann
@@ -24,6 +26,8 @@ public class Variablen {
     /* 4. Weisen Sie dem Buchstaben den Wert 'C' zu
           und geben Sie ihn auf dem Bildschirm aus.*/
         menuSelection = 'C';
+        System.out.printf("%c%n", menuSelection);
+
 
     /* 5. Fuer eine genaue astronomische Berechnung sind grosse Zahlenwerte
           notwendig.
@@ -32,7 +36,7 @@ public class Variablen {
 
     /* 6. Weisen Sie der Zahl den Wert der Lichtgeschwindigkeit zu
           und geben Sie sie auf dem Bildschirm aus.*/
-        astronomicValue = 300000;
+        astronomicValue = 300000L;
         System.out.printf("Das Licht bewegt sich mit %d km/s\n", astronomicValue);
 
     /* 7. Sieben Personen gruenden einen Verein. Fuer eine Vereinsverwaltung

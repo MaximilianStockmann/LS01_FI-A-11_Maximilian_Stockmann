@@ -13,7 +13,7 @@ public class WeltDerZahlen {
         long anzahlSterne = 100000000000L;
 
         // Wie viele Einwohner hat Berlin?
-        int bewohnerBerlin = 4500000;
+        int bewohnerBerlin = 3600000;
 
         // Wie alt bist du? Wie viele Tage sind das?
         short alterTage = 8595;
