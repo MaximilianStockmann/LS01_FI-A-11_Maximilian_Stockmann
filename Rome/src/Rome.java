@@ -4,6 +4,8 @@ import java.util.Scanner;
 //TODO: Add support for lowercase letters
 public class Rome {
     public static void main(String[] args){
+        int outputNumeral;
+
         while (true) {
             Scanner standardScanner = new Scanner(System.in);
 
