@@ -8,7 +8,6 @@ public class Rome {
 
         while (true) {
             Scanner standardScanner = new Scanner(System.in);
-
             System.out.println("Please enter a roman numeral(uppercase only): ");
 
             String romanNumeral = standardScanner.nextLine();
@@ -48,11 +47,12 @@ public class Rome {
             }
 
             //Checks for subtraction
-            if (digit < nextDigit) {
+            if (digit <= nextDigit) {
 
+                //TODO: Currently XXX doesn't work, find way to make XXL invalid, but XXX valid
                 //Checks subtraction rules for I, X and C numerals.
                 if ((digit == 1 || digit == 10 || digit == 100) &&
-                    (nextDigit != digit*5) && (nextDigit != digit*10)) {
+                        (((nextDigit != digit*5) && (nextDigit != digit*10)) || (digit == nextDigit)) ){
                     System.out.println("Invalid numeral");
                     return 0;
                 }
@@ -91,7 +91,7 @@ public class Rome {
     /*Converts each individual character of the numeral to its corresponding integer value and returns
       these in an ArrayList*/
     private static ArrayList<Integer> convertCharacters(String romanNumeral) {
-        ArrayList<Integer> convertedNumeral = new ArrayList<Integer>();
+        ArrayList<Integer> convertedNumeral = new ArrayList<>();
 
         for (char character: romanNumeral.toCharArray()) {
             convertedNumeral.add(evaluateCharacter(character));
