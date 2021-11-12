@@ -1,0 +1,56 @@
+import java.util.Scanner;
+
+public class PCHaendler {
+
+    public static void main(String[] args) {
+        Scanner myScanner = new Scanner(System.in);
+
+        // Benutzereingaben lesen
+        System.out.println("was möchten Sie bestellen?");
+        String artikel = liesString(myScanner);
+
+        System.out.println("Geben Sie die Anzahl ein:");
+        int anzahl = liesInt(myScanner);
+
+        System.out.println("Geben Sie den Nettopreis ein:");
+        double preis = liesDouble(myScanner);
+
+        System.out.println("Geben Sie den Mehrwertsteuersatz in Prozent ein:");
+        double mwst = liesDouble(myScanner);
+
+        // Verarbeiten
+        double nettogesamtpreis = berechneGesamtnettopreis(anzahl, preis);
+        double bruttogesamtpreis = berechneGesamtbruttopreis(nettogesamtpreis, mwst);
+
+        // Ausgeben
+        rechnungausgeben(artikel, anzahl, nettogesamtpreis, bruttogesamtpreis, mwst);
+
+    }
+
+    private static String liesString(Scanner myScanner) {
+        return myScanner.next();
+    }
+
+    private static int liesInt(Scanner myScanner) {
+        return myScanner.nextInt();
+    }
+
+    private static double liesDouble(Scanner myScanner) {
+        return myScanner.nextDouble();
+    }
+
+    private static double berechneGesamtnettopreis(int anzahl, double nettopreis) {
+        return anzahl * nettopreis;
+    }
+
+    private static double berechneGesamtbruttopreis(double nettogesamtpreis, double mwst) {
+        return nettogesamtpreis * (1 + mwst / 100);
+    }
+
+    private static void rechnungausgeben(String artikel, int anzahl, double nettogesamtpreis,
+                                         double bruttogesamtpreis, double mwst) {
+        System.out.println("\tRechnung");
+        System.out.printf("\t\t Netto:  %-20s %6d %10.2f %n", artikel, anzahl, nettogesamtpreis);
+        System.out.printf("\t\t Brutto: %-20s %6d %10.2f (%.1f%s)%n", artikel, anzahl, bruttogesamtpreis, mwst, "%");
+    }
+}

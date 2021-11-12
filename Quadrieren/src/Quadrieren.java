@@ -4,14 +4,11 @@ public class Quadrieren {
 
     public static void main(String[] args) {
 
-        double inputValue;
-        Scanner tastatur = new Scanner(System.in);
-
         // (E) "Eingabe"
         // Wert für x festlegen:
         // ===========================
         printPrompt();
-        inputValue = tastatur.nextDouble();
+        double inputValue = getInput();
 
         // (V) Verarbeitung
         // Mittelwert von x und y berechnen:
@@ -34,5 +31,12 @@ public class Quadrieren {
 
     private static void printOutput(double x, double xSquared) {
         System.out.printf("x = %.2f und x²= %.2f\n", x, xSquared);
+    }
+
+    private static double getInput() {
+        Scanner tastatur = new Scanner(System.in);
+        double inputValue = tastatur.nextDouble();
+
+        return inputValue;
     }
 }
