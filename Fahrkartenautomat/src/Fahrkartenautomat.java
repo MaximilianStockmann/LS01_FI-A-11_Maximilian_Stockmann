@@ -1,5 +1,3 @@
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.Scanner;
 
 class Fahrkartenautomat
@@ -45,8 +43,8 @@ class Fahrkartenautomat
         {
             System.out.printf("Noch zu zahlen %.2f EURO\n", (zuZahlen - eingezahlterGesamtbetrag));
             System.out.print("Eingabe (mind. 5Ct, höchstens 2 Euro): ");
-            float eingeworfeneMünze = tastatur.nextFloat();
-            eingezahlterGesamtbetrag += eingeworfeneMünze;
+            float eingeworfeneMuenze = tastatur.nextFloat();
+            eingezahlterGesamtbetrag += eingeworfeneMuenze;
         }
 
         return eingezahlterGesamtbetrag - zuZahlen;
@@ -126,7 +124,7 @@ class Fahrkartenautomat
             }
         }
 
-        System.out.println("\nVergessen Sie nicht, den Fahrschein\n"+
+        System.out.println("\nVergessen Sie nicht, den Fahrschein\n " +
                 "vor Fahrtantritt entwerten zu lassen!\n"+
                 "Wir wünschen Ihnen eine gute Fahrt.");
     }
