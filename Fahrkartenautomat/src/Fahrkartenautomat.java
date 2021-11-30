@@ -52,16 +52,7 @@ class Fahrkartenautomat
 
     private static void fahrkartenAusgeben() {
         System.out.println("\nFahrschein wird ausgegeben");
-        for (int i = 0; i < 8; i++)
-        {
-            System.out.print("=");
-            try {
-                Thread.sleep(250);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
+        warte(250);
         System.out.println("\n\n");
     }
 
@@ -69,8 +60,7 @@ class Fahrkartenautomat
         if(rueckgabebetrag > 0.0)
         {
             rueckgabebetrag = round(rueckgabebetrag);
-            System.out.println(rueckgabebetrag);
-            System.out.printf("Der Rückgabebetrag in Höhe von %f EURO\n", rueckgabebetrag);
+            System.out.printf("Der Rückgabebetrag in Höhe von %.2f EURO\n", rueckgabebetrag);
             System.out.println("wird in folgenden Münzen ausgezahlt:");
 
             while(rueckgabebetrag >= 2.0f) // 2 EURO-Münzen
@@ -96,7 +86,6 @@ class Fahrkartenautomat
                 System.out.println("20 CENT");
                 rueckgabebetrag -= 0.2f;
                 rueckgabebetrag = round(rueckgabebetrag);
-                System.out.println(rueckgabebetrag);
             }
             while(rueckgabebetrag >= 0.1f) // 10 CENT-Münzen
             {
@@ -131,5 +120,18 @@ class Fahrkartenautomat
 
     private static float round(float toRound) {
         return Math.round(toRound*100f)/100f;
+    }
+
+    private static void warte(int millisekunden) {
+        for (int i = 0; i < 8; i++)
+        {
+            System.out.print("=");
+            try {
+                Thread.sleep(millisekunden);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
     }
 }
