@@ -6,17 +6,11 @@ public class PCHaendler {
         Scanner myScanner = new Scanner(System.in);
 
         // Benutzereingaben lesen
-        System.out.println("was möchten Sie bestellen?");
-        String artikel = liesString(myScanner);
+        String artikel = liesString(myScanner, "was möchten Sie bestellen?");
 
-        System.out.println("Geben Sie die Anzahl ein:");
-        int anzahl = liesInt(myScanner);
-
-        System.out.println("Geben Sie den Nettopreis ein:");
-        double preis = liesDouble(myScanner);
-
-        System.out.println("Geben Sie den Mehrwertsteuersatz in Prozent ein:");
-        double mwst = liesDouble(myScanner);
+        int anzahl = liesInt(myScanner, "Geben Sie die Anzahl ein:");
+        double preis = liesDouble(myScanner, "Geben Sie den Nettopreis ein:");
+        double mwst = liesDouble(myScanner, "Geben Sie den Mehrwertsteuersatz in Prozent ein:");
 
         // Verarbeiten
         double nettogesamtpreis = berechneGesamtnettopreis(anzahl, preis);
@@ -27,15 +21,18 @@ public class PCHaendler {
 
     }
 
-    private static String liesString(Scanner myScanner) {
+    private static String liesString(Scanner myScanner, String text) {
+        System.out.println(text);
         return myScanner.next();
     }
 
-    private static int liesInt(Scanner myScanner) {
+    private static int liesInt(Scanner myScanner, String text) {
+        System.out.println(text);
         return myScanner.nextInt();
     }
 
-    private static double liesDouble(Scanner myScanner) {
+    private static double liesDouble(Scanner myScanner, String text) {
+        System.out.println(text);
         return myScanner.nextDouble();
     }
 

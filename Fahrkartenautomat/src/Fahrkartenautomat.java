@@ -65,61 +65,65 @@ class Fahrkartenautomat
 
             while(rueckgabebetrag >= 2.0f) // 2 EURO-Münzen
             {
-                System.out.println("2 EURO");
+                muenzeAusgeben(2, "EURO");
                 rueckgabebetrag -= 2.0f;
                 rueckgabebetrag = round(rueckgabebetrag);
             }
             while(rueckgabebetrag >= 1.0f) // 1 EURO-Münzen
             {
-                System.out.println("1 EURO");
+                muenzeAusgeben(1, "EURO");
                 rueckgabebetrag -= 1.0f;
                 rueckgabebetrag = round(rueckgabebetrag);
             }
             while(rueckgabebetrag >= 0.5f) // 50 CENT-Münzen
             {
-                System.out.println("50 CENT");
+                muenzeAusgeben(50, "CENT");
                 rueckgabebetrag -= 0.5f;
                 rueckgabebetrag = round(rueckgabebetrag);
             }
             while(rueckgabebetrag >= 0.20f) // 20 CENT-Münzen
             {
-                System.out.println("20 CENT");
+                muenzeAusgeben(20, "CENT");
                 rueckgabebetrag -= 0.2f;
                 rueckgabebetrag = round(rueckgabebetrag);
             }
             while(rueckgabebetrag >= 0.1f) // 10 CENT-Münzen
             {
-                System.out.println("10 CENT");
+                muenzeAusgeben(10, "CENT");
                 rueckgabebetrag -= 0.1f;
                 rueckgabebetrag = round(rueckgabebetrag);
             }
             while(rueckgabebetrag >= 0.05f)// 5 CENT-Münzen
             {
-                System.out.println("5 CENT");
+                muenzeAusgeben(5, "CENT");
                 rueckgabebetrag -= 0.05f;
                 rueckgabebetrag = round(rueckgabebetrag);
             }
             while(rueckgabebetrag >= 0.02f)// 5 CENT-Münzen
             {
-                System.out.println("2 CENT");
+                muenzeAusgeben(2, "CENT");
                 rueckgabebetrag -= 0.02f;
                 rueckgabebetrag = round(rueckgabebetrag);
             }
             while(rueckgabebetrag >= 0.01f)// 5 CENT-Münzen
             {
-                System.out.println("1 CENT");
+                muenzeAusgeben(1, "CENT");
                 rueckgabebetrag -= 0.01f;
                 rueckgabebetrag = round(rueckgabebetrag);
             }
         }
 
-        System.out.println("\nVergessen Sie nicht, den Fahrschein\n " +
+        System.out.println("\nVergessen Sie nicht, den Fahrschein\n" +
                 "vor Fahrtantritt entwerten zu lassen!\n"+
                 "Wir wünschen Ihnen eine gute Fahrt.");
     }
 
     private static float round(float toRound) {
         return Math.round(toRound*100f)/100f;
+    }
+
+    private static void muenzeAusgeben(int wert, String einheit) {
+        System.out.printf("%d %s\n", wert, einheit);
     }
 
     private static void warte(int millisekunden) {
