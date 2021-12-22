@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class Twist {
@@ -12,23 +11,21 @@ public class Twist {
             ArrayList<String> elements = splitInput(inputString);
 
             for (String e : elements) {
-                ArrayList word = convertToArrayList(e);
-
-                word = twist(word);
+                ArrayList<String> word = twist(convertToArrayList(e));
 
                 String output = String.join("", word);
-                twistedSentence += output;
+                twistedSentence += output + " ";
             }
-            System.out.println(twistedSentence);
+            System.out.print(twistedSentence);
         }
     }
 
-    public static ArrayList twist(ArrayList<String> word) {
+    public static ArrayList<String> twist(ArrayList<String> word) {
         return fisherYates(word);
     }
 
     public static ArrayList<String> convertToArrayList(String word) {
-        List str = Arrays.asList(word.split(""));
+        List<String> str = Arrays.asList(word.split(""));
 
         ArrayList<String> result = new ArrayList<String>(str);
 
