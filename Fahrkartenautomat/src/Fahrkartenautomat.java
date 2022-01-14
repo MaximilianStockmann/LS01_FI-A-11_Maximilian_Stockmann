@@ -4,32 +4,65 @@ class Fahrkartenautomat
 {
     public static void main(String[] args)
     {
-       float zuZahlenderBetrag;
-       float rueckgabebetrag;
+        while (true) {
+            float zuZahlenderBetrag = 0.0f;
+            float rueckgabebetrag = 0.0f;
 
-       zuZahlenderBetrag = fahrkartenbestellungErfassen();
+            while (zuZahlenderBetrag == 0) {
+                zuZahlenderBetrag = fahrkartenbestellungErfassen();
+            }
 
-       // Geldeinwurf
-       // -----------
-       rueckgabebetrag = fahrkartenBezahlen(zuZahlenderBetrag);
+            // Geldeinwurf
+            // -----------
+            rueckgabebetrag = fahrkartenBezahlen(zuZahlenderBetrag);
 
-       // Fahrscheinausgabe
-       // -----------------
-        fahrkartenAusgeben();
+            // Fahrscheinausgabe
+            // -----------------
+            fahrkartenAusgeben();
 
-       // Rückgeldberechnung und -Ausgabe
-       // -------------------------------
-        rueckgeldAusgeben(rueckgabebetrag);
+            // Rückgeldberechnung und -Ausgabe
+            // -------------------------------
+            rueckgeldAusgeben(rueckgabebetrag);
+        }
     }
 
     private static float fahrkartenbestellungErfassen() {
         Scanner tastatur = new Scanner(System.in);
+        float zuZahlenderBetrag = 0.0f;
 
-        System.out.print("Zu zahlender Betrag (EURO): ");
-        float zuZahlenderBetrag = tastatur.nextFloat();
+        System.out.println("Herzlich Willkommen am Fahrkartenautomat! Bitte tätigen sie ihre Eingaben.\n");
+
+        System.out.println("Sie können folgende Fahrkarten kaufen. Wählen sie mit Eingabe einer Nummer ihren Eintrag aus:");
+
+        System.out.println("(1) Einzelfahrschein Regeltarif [2,90 €]");
+        System.out.println("(2) Tageskarte Regeltarif [8,60 €]");
+        System.out.println("(3) Kleingruppen-Tageskarte Regeltarif AB [23,50 €]");
+
+        String ticketWahl = tastatur.nextLine();
+
+        //TODO: Adjust so that prices are stored in a map
+        switch(ticketWahl) {
+            case "1" :
+                zuZahlenderBetrag = 2.9f;
+                break;
+            case "2":
+                zuZahlenderBetrag = 8.6f;
+                break;
+            case "3":
+                zuZahlenderBetrag = 23.5f;
+                break;
+            default:
+                System.out.println("Fehlerhafte Eingabe, bitte versuchen sie es erneut.");
+                return 0.0f;
+        }
 
         System.out.print("Zu kaufende Tickets: ");
         byte anzahlTickets = tastatur.nextByte();
+
+        if (anzahlTickets > 10) {
+            System.out.println("Zu viele Tickets, es wird 1 einzelnes Ticket ausgegeben.");
+            anzahlTickets = 1;
+        }
 
         zuZahlenderBetrag *= anzahlTickets;
 
@@ -115,7 +148,7 @@ class Fahrkartenautomat
 
         System.out.println("\nVergessen Sie nicht, den Fahrschein\n" +
                 "vor Fahrtantritt entwerten zu lassen!\n"+
-                "Wir wünschen Ihnen eine gute Fahrt.");
+                "Wir wünschen Ihnen eine gute Fahrt.\n");
     }
 
     private static float round(float toRound) {
