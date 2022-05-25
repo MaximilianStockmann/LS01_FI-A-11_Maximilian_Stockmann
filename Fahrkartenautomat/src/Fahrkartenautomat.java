@@ -34,52 +34,66 @@ class Fahrkartenautomat
 
     private static float fahrkartenbestellungErfassen() {
         Scanner tastatur = new Scanner(System.in);
+        float gesamtBetrag = 0.0f;
         float zuZahlenderBetrag = 0.0f;
+        boolean bezahlen = false;
 
-        System.out.println("Sie können folgende Fahrkarten kaufen. Wählen sie mit Eingabe einer Nummer ihren Eintrag aus. " +
-                "\nWenn sie das Programm beenden wollen, geben sie bitte \"exit\" ein.\n");
+        do {
 
-        System.out.println("(1) Einzelfahrschein Regeltarif [2,90 €]");
-        System.out.println("(2) Tageskarte Regeltarif [8,60 €]");
-        System.out.println("(3) Kleingruppen-Tageskarte Regeltarif AB [23,50 €]\n");
+            System.out.println("Sie können folgende Fahrkarten kaufen. Wählen sie mit Eingabe einer Nummer ihren Eintrag aus. " +
+                    "\nWenn sie das Programm beenden wollen, geben sie bitte \"exit\" ein.\n");
 
-        System.out.println(" >> Eingabe: ");
+            System.out.println("(1) Einzelfahrschein Regeltarif [2,90 €]");
+            System.out.println("(2) Tageskarte Regeltarif [8,60 €]");
+            System.out.println("(3) Kleingruppen-Tageskarte Regeltarif AB [23,50 €]\n");
+            System.out.println("(9) Bezahlen");
 
-        String ticketWahl = tastatur.nextLine();
+            System.out.println(" >> Eingabe: ");
 
-        //TODO: Adjust so that prices are stored in a map
-        switch(ticketWahl) {
-            case "1" :
-                zuZahlenderBetrag = 2.9f;
-                break;
-            case "2":
-                zuZahlenderBetrag = 8.6f;
-                break;
-            case "3":
-                zuZahlenderBetrag = 23.5f;
-                break;
-            case "exit":
-                goodbye();
-                return -1.0f;
-            default:
-                System.out.println(" >> Fehlerhafte Eingabe, bitte versuchen sie es erneut.\n");
+            String ticketWahl = tastatur.nextLine();
+
+            //TODO: Adjust so that prices are stored in a map
+            switch(ticketWahl) {
+                case "1" :
+                    zuZahlenderBetrag = 2.9f;
+                    break;
+                case "2":
+                    zuZahlenderBetrag = 8.6f;
+                    break;
+                case "3":
+                    zuZahlenderBetrag = 23.5f;
+                    break;
+                case "9":
+                    bezahlen = true;
+                    break;
+                case "exit":
+                    goodbye();
+                    return -1.0f;
+                default:
+                    System.out.println(" >> Fehlerhafte Eingabe, bitte versuchen sie es erneut.\n");
+                    return 0.0f;
+            }
+
+            System.out.print(" >> Zu kaufende Tickets: ");
+            byte anzahlTickets = tastatur.nextByte();
+
+            if (anzahlTickets > 10) {
+                System.out.println(" >> Bitte wählen sie eine Anzahl Tickets zwischen 1 und 10.");
                 return 0.0f;
-        }
+            } else if (anzahlTickets <= 0) {
+                System.out.println(" >> Ticketanzahl darf nicht 0 oder negativ sein! Bitte tätigen sie eine neue Eingabe.\n");
+                return 0.0f;
+            }
 
-        System.out.print(" >> Zu kaufende Tickets: ");
-        byte anzahlTickets = tastatur.nextByte();
+            zuZahlenderBetrag *= anzahlTickets;
 
-        if (anzahlTickets > 10) {
-            System.out.println(" >> Bitte wählen sie eine Anzahl Tickets zwischen 1 und 10.");
-            return 0.0f;
-        } else if (anzahlTickets <= 0) {
-            System.out.println(" >> Ticketanzahl darf nicht 0 oder negativ sein! Bitte tätigen sie eine neue Eingabe.\n");
-            return 0.0f;
-        }
+            gesamtBetrag += zuZahlenderBetrag;
 
-        zuZahlenderBetrag *= anzahlTickets;
+            System.out.println("Zwischensumme: " + gesamtBetrag);
 
-        return zuZahlenderBetrag;
+        } while (!bezahlen);
+
+        return gesamtBetrag;
     }
 
     private static float fahrkartenBezahlen(float zuZahlen) {
