@@ -6,6 +6,9 @@ import java.util.ArrayList;
  * adding them to a provided list.
  */
 public class Spaceship extends SpaceObject {
+    /**********************************************
+     MEMBER VARIABLES
+     **********************************************/
     public static ArrayList<String> broadcastCommunicator;
 
     private String name;
@@ -22,7 +25,12 @@ public class Spaceship extends SpaceObject {
     private ArrayList<Freight> freightIndex;
     public ArrayList<String> actionList;
 
-    //Empty constructor
+    /**********************************************
+     CONSTRUCTORS
+     **********************************************/
+    /**
+     * @description Empty Spaceship constructor
+     */
     public Spaceship() {
         setName("");
         setEnergyInPercent(0);
@@ -158,6 +166,9 @@ public class Spaceship extends SpaceObject {
     }
     public void setFreightIndex(ArrayList<Freight> freightIndex) {
         this.freightIndex = freightIndex;
+    }
+    public void setDestructionStatus(boolean isDestroyed) {
+        this.isDestroyed = isDestroyed;
     }
 
     /**********************************************
