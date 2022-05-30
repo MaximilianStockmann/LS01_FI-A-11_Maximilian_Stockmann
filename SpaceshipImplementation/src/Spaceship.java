@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * @author Maximilian Stockmann
@@ -17,12 +18,12 @@ public class Spaceship extends SpaceObject {
     private int hullInPercent;
     private int lifeSupportInPercent;
 
-    private int photonTorpedos;
     private int photonTorpedosLoaded;
     private int repairAndroids;
 
     private boolean isDestroyed;
     private ArrayList<Freight> freightIndex;
+    private ArrayList<Freight> photonTorpedoFreightsOnBoard;
     public ArrayList<String> actionList;
 
     /**********************************************
@@ -37,7 +38,6 @@ public class Spaceship extends SpaceObject {
         setShieldsInPercent(0);
         setHullInPercent(0);
         setLifeSupportInPercent(0);
-        setPhotonTorpedos(0);
         setRepairAndroids(0);
 
         name = "";
@@ -45,11 +45,11 @@ public class Spaceship extends SpaceObject {
         shieldsInPercent = 0;
         hullInPercent = 0;
         lifeSupportInPercent = 0;
-        photonTorpedos = 0;
         photonTorpedosLoaded = 0;
         repairAndroids = 0;
         isDestroyed = false;
         freightIndex = new ArrayList<>();
+        photonTorpedoFreightsOnBoard = new ArrayList<>();
     }
 
     /**
@@ -65,18 +65,19 @@ public class Spaceship extends SpaceObject {
         this.shieldsInPercent = shieldsInPercent;
         this.hullInPercent = hullInPercent;
 
-        photonTorpedos = 0;
         photonTorpedosLoaded = 0;
         repairAndroids = 0;
         isDestroyed = false;
 
         freightIndex = new ArrayList<>();
         actionList = new ArrayList<>();
+        photonTorpedoFreightsOnBoard = new ArrayList<>();
 
         actionList.add("Shoot Phaser");
         actionList.add("Shoot Photon Torpedo");
         actionList.add("Load Cargo");
         actionList.add("Print Status");
+        actionList.add("Load Photon Torpedo");
         actionList.add("Cancel");
     }
 
@@ -87,15 +88,14 @@ public class Spaceship extends SpaceObject {
      * @param shieldsInPercent Current shield strength in %
      * @param hullInPercent Current hull strength in %
      * @param lifeSupportInPercent Functionality of Life Support in %
-     * @param photonTorpedos Photon Torpedos currently on board, see also {@link Freight},
+     * @param photonTorpedosOnBoard Photon Torpedos currently on board as {@link Freight}
      * {@link Spaceship#firePhotonTorpedo}, {@link Spaceship#loadPhotonTorpedos}
      * @param repairAndroids Number of repairAndroids on the ship, see also {@link Freight}
      */
     public Spaceship(String name, int energyInPercent, int shieldsInPercent, int hullInPercent, int lifeSupportInPercent,
-                     int photonTorpedos, int repairAndroids) {
+                     int photonTorpedosOnBoard, int repairAndroids) {
         this(name, energyInPercent, shieldsInPercent, hullInPercent);
         this.lifeSupportInPercent = lifeSupportInPercent;
-        this.photonTorpedos = photonTorpedos;
         photonTorpedosLoaded = 0;
         this.repairAndroids = repairAndroids;
         isDestroyed = false;
@@ -121,9 +121,18 @@ public class Spaceship extends SpaceObject {
     public int getLifeSupportInPercent() {
         return lifeSupportInPercent;
     }
-    public int getPhotonTorpedos() {
-        return photonTorpedos;
+
+    public int getPhotonTorpedosOnBoard() {
+        photonTorpedoFreightsOnBoard = new ArrayList<>();
+        int photonTorpedosOnBoard = 0;
+        Freight.findFreightInFreightList("photon torpedos", getFreightIndex(), photonTorpedoFreightsOnBoard);
+        for (Freight freight : photonTorpedoFreightsOnBoard) {
+            photonTorpedosOnBoard += freight.getAmount();
+        }
+
+        return photonTorpedosOnBoard;
     }
+
     public int getPhotonTorpedosLoaded() {
         return photonTorpedosLoaded;
     }
@@ -155,9 +164,6 @@ public class Spaceship extends SpaceObject {
     public void setLifeSupportInPercent(int lifeSupportInPercent) {
         this.lifeSupportInPercent = lifeSupportInPercent;
     }
-    public void setPhotonTorpedos(int photonTorpedos) {
-        this.photonTorpedos = photonTorpedos;
-    }
     public void setPhotonTorpedosLoaded(int photonTorpedosLoaded) {
         this.photonTorpedosLoaded = photonTorpedosLoaded;
     }
@@ -174,6 +180,9 @@ public class Spaceship extends SpaceObject {
     /**********************************************
      METHODS
      **********************************************/
+    /************************
+     FIGHTING
+     ************************/
     //TODO: Make sure this can only be called if photon torpedos are loaded
     public void firePhotonTorpedo(Spaceship target) {
         target.hitEvent(this, 80, "Photon");
@@ -183,13 +192,64 @@ public class Spaceship extends SpaceObject {
         target.hitEvent(this, 55, "Phaser");
     }
 
+    //What if Photon Torpedos are distributed over multiple Freight Objects in the Freight Index?
+    public void loadPhotonTorpedos(int photonTorpedosToLoad) {
+        int currentPhotonTorpedosOnBoard = getPhotonTorpedosOnBoard();
+
+        if (currentPhotonTorpedosOnBoard > 0 && currentPhotonTorpedosOnBoard > photonTorpedosToLoad) {
+            //Check if one Freight element has enough photon torpedos to satisfy amount, if not take from last list element
+
+            do {
+                int largestSingleAmount = 0;
+                Freight largestAmountFreight = null;
+                Freight currentFreight = null;
+
+                for (Freight freight : photonTorpedoFreightsOnBoard) {
+                    int amount = freight.getAmount();
+                    if (amount > largestSingleAmount) {
+                        largestSingleAmount = amount;
+                        largestAmountFreight = freight;
+                    }
+                }
+
+                if (largestSingleAmount >= photonTorpedosToLoad) {
+                    setPhotonTorpedosLoaded(getPhotonTorpedosLoaded()+photonTorpedosToLoad);
+                    largestAmountFreight.setAmount(largestAmountFreight.getAmount()-photonTorpedosToLoad);
+                    photonTorpedosToLoad = 0;
+                } else {
+                    int temp = 0;
+                    currentFreight = photonTorpedoFreightsOnBoard.get(photonTorpedoFreightsOnBoard.size()-1);
+                    temp = currentFreight.getAmount();
+                    setPhotonTorpedosLoaded(getPhotonTorpedosLoaded()+temp);
+                    currentFreight.setAmount(currentFreight.getAmount()-photonTorpedosToLoad);
+
+                    photonTorpedosToLoad = photonTorpedosToLoad - temp;
+
+                    System.out.println(temp);
+                    System.out.println(photonTorpedosToLoad);
+                    System.out.println(photonTorpedosLoaded);
+
+                    System.out.println("--------------------");
+
+                    if (currentFreight.getAmount() <= 0) {
+                        photonTorpedoFreightsOnBoard.remove(currentFreight);
+                        freightIndex.remove(currentFreight);
+                    }
+                }
+            } while (photonTorpedosToLoad > 0);
+
+        } else if (currentPhotonTorpedosOnBoard < photonTorpedosToLoad) {
+            System.out.println("Can't load that many photon Torpedos! Only "+ currentPhotonTorpedosOnBoard + " on board.");
+        }
+    }
+
     /*
     Hit Event for Spaceship class. Phaser Damage will apply to shields first, before damaging hull with surplus damage.
     Photon Torpedos immediately damage hull.
      */
     private void hitEvent(Spaceship hitBy, int damage, String damageType) {
         int damageSurplus = 0;
-        if (damageType == "Phaser") {
+        if (damageType.equals("Phaser")) {
             if (shieldsInPercent > 0) {
                 shieldsInPercent -= damage;
                 if (shieldsInPercent < 0) {
@@ -208,7 +268,7 @@ public class Spaceship extends SpaceObject {
                 System.out.println(name+" took "+damage+ " damage to shields!");
                 System.out.println(shieldsInPercent +" shield remaining!");
             }
-        } else if (damageType == "Photon") {
+        } else if (damageType.equals("Photon")) {
             hullInPercent -= damage;
             System.out.println(name+" took "+damage+" damage to hull!");
             if (hullInPercent < 0) {
@@ -218,6 +278,10 @@ public class Spaceship extends SpaceObject {
             }
         }
     }
+
+    /************************
+     MESSAGING
+     ************************/
 
     public void broadcastMessage(String message) {
         broadcastCommunicator.add(message);
@@ -231,12 +295,28 @@ public class Spaceship extends SpaceObject {
         return broadcastCommunicator;
     }
 
-    public void loadPhotonTorpedos(int amount) {
-        //stub
-    }
+    /************************
+     UTILITY
+     ************************/
 
     public void addFreight (Freight newFreight) {
         freightIndex.add(newFreight);
+    }
+
+    /**
+     *
+     * @param itemToFind String containing the name of the item to be found
+     * @param results List that resulting {@link Freight} objects get saved in
+     */
+    //What if you gave a Freight Object instead of a String?
+    //This should probably be in Freight class, refactor
+    public void findInFreight(String itemToFind, ArrayList<Freight> results) {
+        for (Freight freightIndexEntry : this.freightIndex) {
+            if (freightIndexEntry.getItemName().toLowerCase(Locale.ROOT).equals(itemToFind.toLowerCase(Locale.ROOT))) {
+                System.out.println("Item found");
+                results.add(freightIndexEntry);
+            }
+        }
     }
 
     public void printStatus() {
@@ -245,14 +325,17 @@ public class Spaceship extends SpaceObject {
         System.out.println("Current shields: " + shieldsInPercent);
         System.out.println("Current hull: " + hullInPercent);
         System.out.println("Current life support: " + lifeSupportInPercent);
-        System.out.println("Current number of photon torpedos: " + photonTorpedos);
+        System.out.println("Current number of photon torpedos in Freight: " + getPhotonTorpedosOnBoard());
+        if (getPhotonTorpedosLoaded() > 0) {
+            System.out.println("There are currently " + getPhotonTorpedosLoaded() + " Photon Torpedos loaded!");
+        } else {
+            System.out.println("There are currently no Photon Torpedos loaded!");
+        }
         System.out.println("Current repair androids on board: " + repairAndroids);
 
         System.out.println("\nCurrent Freight:");
         for (Freight freight : freightIndex) {
             System.out.println(freight.getItemName() + ": " + freight.getAmount());
         }
-
-        //TODO: ADD FREIGHT DISPLAY
     }
 }

@@ -42,6 +42,8 @@ public class Game {
         romulanShip.addFreight(new Freight("Borg scrap", 5));
         romulanShip.addFreight(new Freight("Red matter", 2));
         romulanShip.addFreight(new Freight("Plasma weapon", 50));
+        romulanShip.addFreight(new Freight("Photon Torpedos", 2));
+        romulanShip.addFreight(new Freight("Photon Torpedos", 3));
 
         spaceshipList.add(klingonShip);
         spaceshipList.add(romulanShip);
@@ -172,6 +174,10 @@ public class Game {
             } else if (actionChoice == 4) {
                 System.out.println(ANSI_RESET);
                 game.currentSpaceshipSelection.printStatus();
+            } else if (actionChoice == 5) {
+                System.out.println("Load how many Photon Torpedos?");
+                int amount = mainInput.nextInt();
+                game.currentSpaceshipSelection.loadPhotonTorpedos(amount);
             } else if (actionChoice == game.currentSpaceshipSelection.actionList.size()) {
                 System.out.println("Returning to ship selection.");
                 return;
