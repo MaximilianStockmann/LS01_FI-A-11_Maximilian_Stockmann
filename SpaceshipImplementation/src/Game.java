@@ -15,6 +15,7 @@ public class Game {
     public static final String ANSI_WHITE = "\u001B[37m";
 
     private static Game game = null;
+
     private final Scanner mainInput;
 
     private Spaceship currentSpaceshipSelection;
@@ -25,6 +26,10 @@ public class Game {
      **********************************************/
     public Spaceship getCurrentSpaceshipSelection() {
         return currentSpaceshipSelection;
+    }
+
+    public Scanner getMainInput() {
+        return mainInput;
     }
 
     /**********************************************
@@ -150,53 +155,6 @@ public class Game {
             String spaceshipActionToTake = game.currentSpaceshipSelection.actionList.get(actionChoice-UI_ARRAY_REP_ADJUSTMENT);
 
             Action.valueOfLabel(spaceshipActionToTake).executeAction(game.currentSpaceshipSelection);
-
-            if (spaceshipActionToTake.equals(Action.SHOOT_PHASER.uiLabel)) {
-                Spaceship target = game.chooseSpaceship("Please enter target ship to hit with Phaser Cannons: ");
-
-                game.currentSpaceshipSelection.firePhaserCannon(target);
-
-                game.cont();
-            } else if (spaceshipActionToTake.equals(Action.SHOOT_PHOTON_TORPEDO.uiLabel)) {
-                Spaceship target = game.chooseSpaceship("Please enter target ship to hit with Photon Torpedo: ");
-
-                game.currentSpaceshipSelection.firePhotonTorpedo(target);
-
-                game.cont();
-            } else if (spaceshipActionToTake.equals(Action.LOAD_CARGO.uiLabel)) {
-                System.out.print("Please specify cargo to load (\"cancel\" to cancel): ");
-                mainInput.nextLine();
-                String itemName = game.mainInput.nextLine();
-
-                if (itemName.toLowerCase(Locale.ROOT).equals("cancel")) {
-                    System.out.println("No cargo has been loaded.\n");
-                    game.cont();
-                    return;
-                }
-
-                System.out.print("Please specify amount: ");
-                int amount = game.mainInput.nextInt();
-
-                //TODO: Add option to cancel out of amount selection
-
-                game.currentSpaceshipSelection.addFreight(new Freight(itemName, amount));
-
-                System.out.println("\n"+ amount+" "+ itemName +" have been loaded successfully.");
-
-                game.cont();
-            } else if (spaceshipActionToTake.equals(Action.PRINT_STATUS.uiLabel)) {
-                System.out.println(ANSI_RESET);
-                game.currentSpaceshipSelection.printStatus();
-            } else if (spaceshipActionToTake.equals(Action.LOAD_PHOTON_TORPEDO.uiLabel)) {
-                System.out.println("Load how many Photon Torpedos?");
-                int amount = mainInput.nextInt();
-                game.currentSpaceshipSelection.loadPhotonTorpedos(amount);
-            } else if (spaceshipActionToTake.equals(Action.CANCEL.uiLabel)) {
-                System.out.println("Returning to ship selection.");
-                return;
-            } else {
-                System.out.println("Not a valid option! Please choose again.");
-            }
         }
     }
 

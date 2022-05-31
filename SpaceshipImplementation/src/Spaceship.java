@@ -12,17 +12,6 @@ public class Spaceship extends SpaceObject {
      **********************************************/
     public static ArrayList<String> broadcastCommunicator;
 
-    public static final String PHASER = "Shoot Phaser";
-
-    public enum Actions {
-        PHASER,
-        FIRE_PHOTON_TORPEDO,
-        LOAD_CARGO,
-        PRINT_STATUS,
-        LOAD_PHOTON_TORPEDO,
-        CANCEL
-    }
-
     private String name;
     private int energyInPercent;
     private int shieldsInPercent;
@@ -214,7 +203,7 @@ public class Spaceship extends SpaceObject {
             do {
                 int largestSingleAmount = 0;
                 Freight largestAmountFreight = null;
-                Freight currentFreight = null;
+                Freight currentFreight;
 
                 for (Freight freight : photonTorpedoFreightsOnBoard) {
                     int amount = freight.getAmount();
@@ -234,7 +223,7 @@ public class Spaceship extends SpaceObject {
                         freightIndex.remove(largestAmountFreight);
                     }
                 } else {
-                    int temp = 0;
+                    int temp;
                     currentFreight = largestAmountFreight;
                     //currentFreight = photonTorpedoFreightsOnBoard.get(photonTorpedoFreightsOnBoard.size()-1);
                     temp = currentFreight.getAmount();
@@ -250,7 +239,9 @@ public class Spaceship extends SpaceObject {
                 }
             } while (photonTorpedosToLoad > 0);
 
+            System.out.println(Game.ANSI_RESET);
             System.out.println(originalAmountToLoad + " photon torpedos have been loaded.");
+            System.out.println(Game.ANSI_GREEN);
             Game.instance().cont();
 
         } else if (currentPhotonTorpedosOnBoard < photonTorpedosToLoad) {
