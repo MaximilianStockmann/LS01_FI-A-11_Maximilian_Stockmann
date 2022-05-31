@@ -12,6 +12,17 @@ public class Spaceship extends SpaceObject {
      **********************************************/
     public static ArrayList<String> broadcastCommunicator;
 
+    public static final String PHASER = "Shoot Phaser";
+
+    public enum Actions {
+        PHASER,
+        FIRE_PHOTON_TORPEDO,
+        LOAD_CARGO,
+        PRINT_STATUS,
+        LOAD_PHOTON_TORPEDO,
+        CANCEL
+    }
+
     private String name;
     private int energyInPercent;
     private int shieldsInPercent;
@@ -81,19 +92,17 @@ public class Spaceship extends SpaceObject {
         actionList.add("Cancel");
     }
 
-    /**Fully parameterized constructor
-     *
+    /**
+     * @description Fully parameterized constructor
      * @param name Name of the spaceship
      * @param energyInPercent Current energy level in %
      * @param shieldsInPercent Current shield strength in %
      * @param hullInPercent Current hull strength in %
      * @param lifeSupportInPercent Functionality of Life Support in %
-     * @param photonTorpedosOnBoard Photon Torpedos currently on board as {@link Freight}
-     * {@link Spaceship#firePhotonTorpedo}, {@link Spaceship#loadPhotonTorpedos}
      * @param repairAndroids Number of repairAndroids on the ship, see also {@link Freight}
      */
     public Spaceship(String name, int energyInPercent, int shieldsInPercent, int hullInPercent, int lifeSupportInPercent,
-                     int photonTorpedosOnBoard, int repairAndroids) {
+                     int repairAndroids) {
         this(name, energyInPercent, shieldsInPercent, hullInPercent);
         this.lifeSupportInPercent = lifeSupportInPercent;
         photonTorpedosLoaded = 0;
@@ -185,20 +194,23 @@ public class Spaceship extends SpaceObject {
      ************************/
     //TODO: Make sure this can only be called if photon torpedos are loaded
     public void firePhotonTorpedo(Spaceship target) {
-        target.hitEvent(this, 80, "Photon");
+        if (photonTorpedosLoaded < 0) {
+            System.out.println("No photon torpedos loaded!");
+        } else {
+            target.hitEvent(this, 80, "Photon");
+        }
     }
 
     public void firePhaserCannon(Spaceship target) {
         target.hitEvent(this, 55, "Phaser");
     }
 
-    //What if Photon Torpedos are distributed over multiple Freight Objects in the Freight Index?
+    //This still shows bugged behaviour when calling the function multiple times in a row
     public void loadPhotonTorpedos(int photonTorpedosToLoad) {
         int currentPhotonTorpedosOnBoard = getPhotonTorpedosOnBoard();
 
-        if (currentPhotonTorpedosOnBoard > 0 && currentPhotonTorpedosOnBoard > photonTorpedosToLoad) {
-            //Check if one Freight element has enough photon torpedos to satisfy amount, if not take from last list element
-
+        if (currentPhotonTorpedosOnBoard > 0 && currentPhotonTorpedosOnBoard >= photonTorpedosToLoad) {
+            int originalAmountToLoad = photonTorpedosToLoad;
             do {
                 int largestSingleAmount = 0;
                 Freight largestAmountFreight = null;
@@ -211,25 +223,25 @@ public class Spaceship extends SpaceObject {
                         largestAmountFreight = freight;
                     }
                 }
-
+                //Check if one Freight element has enough photon torpedos to satisfy amount,
+                //if not take from last list element
                 if (largestSingleAmount >= photonTorpedosToLoad) {
                     setPhotonTorpedosLoaded(getPhotonTorpedosLoaded()+photonTorpedosToLoad);
                     largestAmountFreight.setAmount(largestAmountFreight.getAmount()-photonTorpedosToLoad);
                     photonTorpedosToLoad = 0;
+                    if (largestAmountFreight.getAmount() <= 0) {
+                        photonTorpedoFreightsOnBoard.remove(largestAmountFreight);
+                        freightIndex.remove(largestAmountFreight);
+                    }
                 } else {
                     int temp = 0;
-                    currentFreight = photonTorpedoFreightsOnBoard.get(photonTorpedoFreightsOnBoard.size()-1);
+                    currentFreight = largestAmountFreight;
+                    //currentFreight = photonTorpedoFreightsOnBoard.get(photonTorpedoFreightsOnBoard.size()-1);
                     temp = currentFreight.getAmount();
                     setPhotonTorpedosLoaded(getPhotonTorpedosLoaded()+temp);
                     currentFreight.setAmount(currentFreight.getAmount()-photonTorpedosToLoad);
 
                     photonTorpedosToLoad = photonTorpedosToLoad - temp;
-
-                    System.out.println(temp);
-                    System.out.println(photonTorpedosToLoad);
-                    System.out.println(photonTorpedosLoaded);
-
-                    System.out.println("--------------------");
 
                     if (currentFreight.getAmount() <= 0) {
                         photonTorpedoFreightsOnBoard.remove(currentFreight);
@@ -237,6 +249,9 @@ public class Spaceship extends SpaceObject {
                     }
                 }
             } while (photonTorpedosToLoad > 0);
+
+            System.out.println(originalAmountToLoad + " photon torpedos have been loaded.");
+            Game.instance().cont();
 
         } else if (currentPhotonTorpedosOnBoard < photonTorpedosToLoad) {
             System.out.println("Can't load that many photon Torpedos! Only "+ currentPhotonTorpedosOnBoard + " on board.");
@@ -248,7 +263,7 @@ public class Spaceship extends SpaceObject {
     Photon Torpedos immediately damage hull.
      */
     private void hitEvent(Spaceship hitBy, int damage, String damageType) {
-        int damageSurplus = 0;
+        int damageSurplus;
         if (damageType.equals("Phaser")) {
             if (shieldsInPercent > 0) {
                 shieldsInPercent -= damage;
@@ -319,6 +334,7 @@ public class Spaceship extends SpaceObject {
         }
     }
 
+    @Override
     public void printStatus() {
         System.out.println("Status of the " + name + ":");
         System.out.println("Current energy: " + energyInPercent);

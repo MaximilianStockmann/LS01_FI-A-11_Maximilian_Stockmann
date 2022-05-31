@@ -21,6 +21,13 @@ public class Game {
     private final ArrayList<Spaceship> spaceshipList;
 
     /**********************************************
+     GETTERS
+     **********************************************/
+    public Spaceship getCurrentSpaceshipSelection() {
+        return currentSpaceshipSelection;
+    }
+
+    /**********************************************
      CONSTRUCTOR
      **********************************************/
     private Game() {
@@ -31,10 +38,10 @@ public class Game {
         //Spaceship borg = new Spaceship("Borg", 100, 150, 250);
 
         Spaceship klingonShip = new Spaceship("ISK Hegh'ta", 100, 100,
-                100, 100, 0, 2);
+                100, 100, 2);
 
         Spaceship romulanShip = new Spaceship("IRW Khazara", 100, 100,
-                100, 100, 2, 2);
+                100, 100, 2);
 
         klingonShip.addFreight(new Freight("Ferengi snail juice", 200));
         klingonShip.addFreight(new Freight("Bat'leth klingon sword", 200));
@@ -95,7 +102,7 @@ public class Game {
     }
 
     //TODO: Refactor chooseSpaceship() and chooseSpaceshipAction() into generalized choice interface
-    private Spaceship chooseSpaceship(String inputPrompt) {
+    public Spaceship chooseSpaceship(String inputPrompt) {
         Spaceship choice;
 
         //TODO: If all ships are destroyed you can't get out of this menu, add another return
@@ -126,11 +133,13 @@ public class Game {
         }
     }
 
+    //This behaviour needs to interface with the actionList of the Spaceship class somehow
     private void chooseSpaceshipAction(String inputPrompt) {
         while(true) {
             System.out.println(ANSI_GREEN + inputPrompt + ANSI_CYAN);
 
-            printSelectionList(game.currentSpaceshipSelection.actionList);
+            //printSelectionList(game.currentSpaceshipSelection.actionList);
+            printActionList();
 
             System.out.print(ANSI_GREEN);
 
@@ -138,21 +147,26 @@ public class Game {
 
             int actionChoice = game.mainInput.nextInt();
 
-            if (actionChoice == 1) {
+            String spaceshipActionToTake = game.currentSpaceshipSelection.actionList.get(actionChoice-UI_ARRAY_REP_ADJUSTMENT);
+
+            Action.valueOfLabel(spaceshipActionToTake).executeAction(game.currentSpaceshipSelection);
+
+            if (spaceshipActionToTake.equals(Action.SHOOT_PHASER.uiLabel)) {
                 Spaceship target = game.chooseSpaceship("Please enter target ship to hit with Phaser Cannons: ");
 
                 game.currentSpaceshipSelection.firePhaserCannon(target);
 
                 game.cont();
-            } else if (actionChoice == 2) {
+            } else if (spaceshipActionToTake.equals(Action.SHOOT_PHOTON_TORPEDO.uiLabel)) {
                 Spaceship target = game.chooseSpaceship("Please enter target ship to hit with Photon Torpedo: ");
 
                 game.currentSpaceshipSelection.firePhotonTorpedo(target);
 
                 game.cont();
-            } else if (actionChoice == 3) {
+            } else if (spaceshipActionToTake.equals(Action.LOAD_CARGO.uiLabel)) {
                 System.out.print("Please specify cargo to load (\"cancel\" to cancel): ");
-                String itemName = game.mainInput.next();
+                mainInput.nextLine();
+                String itemName = game.mainInput.nextLine();
 
                 if (itemName.toLowerCase(Locale.ROOT).equals("cancel")) {
                     System.out.println("No cargo has been loaded.\n");
@@ -162,7 +176,6 @@ public class Game {
 
                 System.out.print("Please specify amount: ");
                 int amount = game.mainInput.nextInt();
-                //TODO: Above line throws an exception if Cargo Type had space in it, fix
 
                 //TODO: Add option to cancel out of amount selection
 
@@ -171,14 +184,14 @@ public class Game {
                 System.out.println("\n"+ amount+" "+ itemName +" have been loaded successfully.");
 
                 game.cont();
-            } else if (actionChoice == 4) {
+            } else if (spaceshipActionToTake.equals(Action.PRINT_STATUS.uiLabel)) {
                 System.out.println(ANSI_RESET);
                 game.currentSpaceshipSelection.printStatus();
-            } else if (actionChoice == 5) {
+            } else if (spaceshipActionToTake.equals(Action.LOAD_PHOTON_TORPEDO.uiLabel)) {
                 System.out.println("Load how many Photon Torpedos?");
                 int amount = mainInput.nextInt();
                 game.currentSpaceshipSelection.loadPhotonTorpedos(amount);
-            } else if (actionChoice == game.currentSpaceshipSelection.actionList.size()) {
+            } else if (spaceshipActionToTake.equals(Action.CANCEL.uiLabel)) {
                 System.out.println("Returning to ship selection.");
                 return;
             } else {
@@ -195,7 +208,8 @@ public class Game {
 //        }
 //    }
 
-    private void cont() {
+    //TODO: There's still weirdness with the buffer here, fix
+    public void cont() {
         System.out.print("Press enter to continue.");
 
         String readString = game.mainInput.nextLine();
@@ -221,6 +235,13 @@ public class Game {
         }
     }
 
+    private void printActionList() {
+        for (Action action : Action.values()){
+            System.out.print(action.ordinal()+UI_ARRAY_REP_ADJUSTMENT + " ");
+            System.out.println(action.uiLabel);
+        }
+    }
+
     private void putColorInConsole(String color) {
         final String ANSI_RESET = "\u001B[0m";
         final String ANSI_BLACK = "\u001B[30m";
@@ -232,6 +253,7 @@ public class Game {
         final String ANSI_CYAN = "\u001B[36m";
         final String ANSI_WHITE = "\u001B[37m";
 
+        //Finish this
         switch (color){
             case "White" :
                 System.out.println(ANSI_RESET);break;
