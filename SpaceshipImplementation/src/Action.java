@@ -1,23 +1,24 @@
-import java.util.ArrayList;
 import java.util.Locale;
 
+//To add Actions add them as a member here and then add according entry in the executeAction method
 public enum Action {
     SHOOT_PHASER("Shoot Phaser"),
     SHOOT_PHOTON_TORPEDO("Shoot Photon Torpedo"),
     LOAD_CARGO("Load Cargo"),
     PRINT_STATUS("Print Status"),
     LOAD_PHOTON_TORPEDO("Load Photon Torpedo"),
+    USE_REPAIR_ANDROIDS("Use Repair Androids"),
     CANCEL("Cancel");
 
-    public final String uiLabel;
+    public final String label;
 
-    private Action(String uiLabel) {
-        this.uiLabel = uiLabel;
+    Action(String label) {
+        this.label = label;
     }
 
     public static Action valueOfLabel(String uiLabel) {
         for (Action action : values()) {
-            if (action.uiLabel.equals(uiLabel)) {
+            if (action.label.equals(uiLabel)) {
                 return action;
             }
         }
@@ -28,13 +29,13 @@ public enum Action {
         if (this == Action.SHOOT_PHASER) {
             Spaceship target = Game.instance().chooseSpaceship("Please enter target ship to hit with Phaser Cannons: ");
 
-            Game.instance().getCurrentSpaceshipSelection().firePhaserCannon(target);
+            spaceship.firePhaserCannon(target);
 
             Game.instance().cont();
         } else if (this == Action.SHOOT_PHOTON_TORPEDO) {
             Spaceship target = Game.instance().chooseSpaceship("Please enter target ship to hit with Photon Torpedo: ");
 
-            Game.instance().getCurrentSpaceshipSelection().firePhotonTorpedo(target);
+            spaceship.firePhotonTorpedo(target);
 
             Game.instance().cont();
         } else if (this == Action.LOAD_CARGO) {
@@ -53,22 +54,39 @@ public enum Action {
 
             //TODO: Add option to cancel out of amount selection
 
-            Game.instance().getCurrentSpaceshipSelection().addFreight(new Freight(itemName, amount));
+            spaceship.addFreight(new Freight(itemName, amount));
 
             System.out.println("\n"+ amount+" "+ itemName +" have been loaded successfully.");
 
             Game.instance().cont();
         } else if (this == Action.PRINT_STATUS) {
+
             System.out.println(Game.ANSI_RESET);
-            Game.instance().getCurrentSpaceshipSelection().printStatus();
+            spaceship.printStatus();
+
         } else if (this == Action.LOAD_PHOTON_TORPEDO) {
+
             System.out.println("Load how many Photon Torpedos?");
             System.out.print("\n> ");
             int amount = Game.instance().getMainInput().nextInt();
-            Game.instance().getCurrentSpaceshipSelection().loadPhotonTorpedos(amount);
+            spaceship.loadPhotonTorpedos(amount);
+
+        } else if (this == Action.USE_REPAIR_ANDROIDS) {
+            ShipStructure[] shipStructures = {ShipStructure.ENERGY, ShipStructure.SHIELDS,
+                    ShipStructure.HULL, ShipStructure.LIFE_SUPPORT};
+
+            System.out.println("Use how many Repair Androids?");
+            System.out.print("\n> ");
+            int repairAndroidsToUse = Game.instance().getMainInput().nextInt();
+
+            for (ShipStructure shipStructure : shipStructures) {
+                shipStructure.toRepair = true;
+            }
+
+            spaceship.useRepairAndroids(shipStructures, repairAndroidsToUse);
+
         } else if (this == Action.CANCEL) {
             System.out.println("Returning to ship selection.");
-            return;
         } else { //Have to model this in chooseSpaceshipAction in Game class
             System.out.println("Not a valid option! Please choose again.");
         }

@@ -45,8 +45,8 @@ public class Game {
         Spaceship klingonShip = new Spaceship("ISK Hegh'ta", 100, 100,
                 100, 100, 2);
 
-        Spaceship romulanShip = new Spaceship("IRW Khazara", 100, 100,
-                100, 100, 2);
+        Spaceship romulanShip = new Spaceship("IRW Khazara", 70, 76,
+                80, 100, 7);
 
         klingonShip.addFreight(new Freight("Ferengi snail juice", 200));
         klingonShip.addFreight(new Freight("Bat'leth klingon sword", 200));
@@ -100,8 +100,6 @@ public class Game {
         game.currentSpaceshipSelection = game.chooseSpaceship("\nPlease select ship from list by choosing it's number:");
         System.out.print(ANSI_RESET);
 
-        game.currentSpaceshipSelection.printStatus();
-
         game.chooseSpaceshipAction("What should  the "+ game.currentSpaceshipSelection.getName() + " do?");
         System.out.print(ANSI_RESET);
     }
@@ -152,7 +150,7 @@ public class Game {
 
             int actionChoice = game.mainInput.nextInt();
 
-            String spaceshipActionToTake = game.currentSpaceshipSelection.actionList.get(actionChoice-UI_ARRAY_REP_ADJUSTMENT);
+            String spaceshipActionToTake = Action.values()[actionChoice-UI_ARRAY_REP_ADJUSTMENT].label;
 
             Action.valueOfLabel(spaceshipActionToTake).executeAction(game.currentSpaceshipSelection);
         }
@@ -196,7 +194,7 @@ public class Game {
     private void printActionList() {
         for (Action action : Action.values()){
             System.out.print(action.ordinal()+UI_ARRAY_REP_ADJUSTMENT + " ");
-            System.out.println(action.uiLabel);
+            System.out.println(action.label);
         }
     }
 

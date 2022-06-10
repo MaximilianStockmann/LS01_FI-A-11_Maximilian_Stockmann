@@ -24,7 +24,6 @@ public class Spaceship extends SpaceObject {
     private boolean isDestroyed;
     private ArrayList<Freight> freightIndex;
     private ArrayList<Freight> photonTorpedoFreightsOnBoard;
-    public ArrayList<String> actionList;
 
     /**********************************************
      CONSTRUCTORS
@@ -70,15 +69,7 @@ public class Spaceship extends SpaceObject {
         isDestroyed = false;
 
         freightIndex = new ArrayList<>();
-        actionList = new ArrayList<>();
         photonTorpedoFreightsOnBoard = new ArrayList<>();
-
-        actionList.add("Shoot Phaser");
-        actionList.add("Shoot Photon Torpedo");
-        actionList.add("Load Cargo");
-        actionList.add("Print Status");
-        actionList.add("Load Photon Torpedo");
-        actionList.add("Cancel");
     }
 
     /**
@@ -94,10 +85,10 @@ public class Spaceship extends SpaceObject {
                      int repairAndroids) {
         this(name, energyInPercent, shieldsInPercent, hullInPercent);
         this.lifeSupportInPercent = lifeSupportInPercent;
-        photonTorpedosLoaded = 0;
+        this.photonTorpedosLoaded = 0;
         this.repairAndroids = repairAndroids;
-        isDestroyed = false;
-        freightIndex = new ArrayList<>();
+        this.isDestroyed = false;
+        this.freightIndex = new ArrayList<>();
     }
 
     @Override
@@ -111,7 +102,10 @@ public class Spaceship extends SpaceObject {
     public String getName() {
         return name;
     }
-    public int getEnergyInPercent() { return energyInPercent; }
+    public int getEnergyInPercent() {
+        return this.energyInPercent;
+    }
+
     public int getShieldsInPercent() {
         return shieldsInPercent;
     }
@@ -213,7 +207,7 @@ public class Spaceship extends SpaceObject {
                     }
                 }
                 //Check if one Freight element has enough photon torpedos to satisfy amount,
-                //if not take from last list element
+                //if not take from largest list element
                 if (largestSingleAmount >= photonTorpedosToLoad) {
                     setPhotonTorpedosLoaded(getPhotonTorpedosLoaded()+photonTorpedosToLoad);
                     largestAmountFreight.setAmount(largestAmountFreight.getAmount()-photonTorpedosToLoad);
@@ -225,7 +219,6 @@ public class Spaceship extends SpaceObject {
                 } else {
                     int temp;
                     currentFreight = largestAmountFreight;
-                    //currentFreight = photonTorpedoFreightsOnBoard.get(photonTorpedoFreightsOnBoard.size()-1);
                     temp = currentFreight.getAmount();
                     setPhotonTorpedosLoaded(getPhotonTorpedosLoaded()+temp);
                     currentFreight.setAmount(currentFreight.getAmount()-photonTorpedosToLoad);
@@ -309,6 +302,11 @@ public class Spaceship extends SpaceObject {
         freightIndex.add(newFreight);
     }
 
+    //TODO: Add functionality to merge different freights of the same type
+    public void cleanFreightIndex() {
+        //stub
+    }
+
     /**
      *
      * @param itemToFind String containing the name of the item to be found
@@ -324,6 +322,35 @@ public class Spaceship extends SpaceObject {
             }
         }
     }
+
+    public void useRepairAndroids(ShipStructure[] shipStructures, int androidAmountToUse) {
+        double random_number = Math.random() * 100;
+        int amountOfStructuresToRepair = 0;
+        int repairedAmount = 0;
+
+        if (androidAmountToUse > this.repairAndroids) {
+            androidAmountToUse = this.repairAndroids;
+        }
+
+        for (ShipStructure shipStructure : shipStructures) {
+            if (shipStructure.toRepair) {
+                amountOfStructuresToRepair += 1;
+            }
+        }
+
+        repairedAmount = (int)(random_number * androidAmountToUse) / amountOfStructuresToRepair;
+
+        for (ShipStructure shipStructure : shipStructures) {
+            if (shipStructure.toRepair) {
+                shipStructure.repair(this, repairedAmount);
+                System.out.println("Repairing " + shipStructure.label);
+            }
+        }
+
+        System.out.println("Parts have been repaired for " + repairedAmount);
+    }
+
+
 
     @Override
     public void printStatus() {

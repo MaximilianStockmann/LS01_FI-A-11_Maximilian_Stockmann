@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Locale;
 
+//TODO: Add functionality for this to save items as objects instead of strings
 public class Freight {
     private String itemName;
     private int amount;
