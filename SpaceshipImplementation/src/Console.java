@@ -1,3 +1,5 @@
+import java.io.IOException;
+
 public enum Console {
     ANSI_RESET("\u001B[0m"),
     ANSI_BLACK("\u001B[30m"),
@@ -7,7 +9,8 @@ public enum Console {
     ANSI_BLUE("\u001B[34m"),
     ANSI_PURPLE("\u001B[35m"),
     ANSI_CYAN("\u001B[36m"),
-    ANSI_WHITE("\u001B[37m");
+    ANSI_WHITE("\u001B[37m"),
+    CLEAR("\033[H\033[2J");
 
     public final String ansiColorCode;
 
@@ -22,5 +25,16 @@ public enum Console {
             }
         }
         return null;
+    }
+
+    public static void clearConsole() {
+        try {
+            if (System.getProperty("os.name").contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            }
+            else {
+                System.out.print("\033\143");
+            }
+        } catch (IOException | InterruptedException ex) {}
     }
 }

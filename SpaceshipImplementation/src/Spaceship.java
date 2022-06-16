@@ -25,6 +25,10 @@ public class Spaceship extends SpaceObject {
     private ArrayList<Freight> freightIndex;
     private ArrayList<Freight> photonTorpedoFreightsOnBoard;
 
+    static {
+        broadcastCommunicator = new ArrayList<>();
+    }
+
     /**********************************************
      CONSTRUCTORS
      **********************************************/
@@ -114,6 +118,10 @@ public class Spaceship extends SpaceObject {
         return lifeSupportInPercent;
     }
 
+    /**
+     * @description Looks trough all Freight objects on board and adds their amounts together
+     * @return Total amount of photon torpedos among all {@link Freight} objects on board
+     */
     public int getPhotonTorpedosOnBoard() {
         photonTorpedoFreightsOnBoard = new ArrayList<>();
         int photonTorpedosOnBoard = 0;
@@ -232,9 +240,8 @@ public class Spaceship extends SpaceObject {
                 }
             } while (photonTorpedosToLoad > 0);
 
-            System.out.println(Game.ANSI_RESET);
+            System.out.println(Console.ANSI_RESET.ansiColorCode);
             System.out.println(originalAmountToLoad + " photon torpedos have been loaded.");
-            System.out.println(Game.ANSI_GREEN);
             Game.instance().cont();
 
         } else if (currentPhotonTorpedosOnBoard < photonTorpedosToLoad) {
@@ -247,6 +254,7 @@ public class Spaceship extends SpaceObject {
     Photon Torpedos immediately damage hull.
      */
     private void hitEvent(Spaceship hitBy, int damage, String damageType) {
+        System.out.println(Console.ANSI_RESET.ansiColorCode);
         int damageSurplus;
         if (damageType.equals("Phaser")) {
             if (shieldsInPercent > 0) {
@@ -282,6 +290,7 @@ public class Spaceship extends SpaceObject {
      MESSAGING
      ************************/
 
+    //TODO: Should the broadcast communicator keep track of which ship sent the message?
     public void broadcastMessage(String message) {
         broadcastCommunicator.add(message);
     }
@@ -304,22 +313,10 @@ public class Spaceship extends SpaceObject {
 
     //TODO: Add functionality to merge different freights of the same type
     public void cleanFreightIndex() {
-        //stub
-    }
+        freightIndex.removeIf(freight -> freight.getAmount() == 0);
 
-    /**
-     *
-     * @param itemToFind String containing the name of the item to be found
-     * @param results List that resulting {@link Freight} objects get saved in
-     */
-    //What if you gave a Freight Object instead of a String?
-    //This should probably be in Freight class, refactor
-    public void findInFreight(String itemToFind, ArrayList<Freight> results) {
-        for (Freight freightIndexEntry : this.freightIndex) {
-            if (freightIndexEntry.getItemName().toLowerCase(Locale.ROOT).equals(itemToFind.toLowerCase(Locale.ROOT))) {
-                System.out.println("Item found");
-                results.add(freightIndexEntry);
-            }
+        for (Freight freight : freightIndex) {
+
         }
     }
 
@@ -330,6 +327,8 @@ public class Spaceship extends SpaceObject {
 
         if (androidAmountToUse > this.repairAndroids) {
             androidAmountToUse = this.repairAndroids;
+        } else if (androidAmountToUse < 0) {
+            androidAmountToUse = 0;
         }
 
         for (ShipStructure shipStructure : shipStructures) {
@@ -338,7 +337,10 @@ public class Spaceship extends SpaceObject {
             }
         }
 
-        repairedAmount = (int)(random_number * androidAmountToUse) / amountOfStructuresToRepair;
+        //TODO: Account for negative values, 0, maybe use Math.abs()
+        repairedAmount = (int) Math.abs((random_number * androidAmountToUse) / amountOfStructuresToRepair);
+
+        System.out.println(Console.ANSI_RESET.ansiColorCode);
 
         for (ShipStructure shipStructure : shipStructures) {
             if (shipStructure.toRepair) {
@@ -348,6 +350,8 @@ public class Spaceship extends SpaceObject {
         }
 
         System.out.println("Parts have been repaired for " + repairedAmount);
+
+        Game.instance().cont();
     }
 
 
@@ -371,5 +375,6 @@ public class Spaceship extends SpaceObject {
         for (Freight freight : freightIndex) {
             System.out.println(freight.getItemName() + ": " + freight.getAmount());
         }
+        System.out.println();
     }
 }

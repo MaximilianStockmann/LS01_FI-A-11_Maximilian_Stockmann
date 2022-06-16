@@ -41,4 +41,9 @@ public class Freight {
             }
         }
     }
+
+    @Override
+    public String toString() {
+        return getItemName();
+    }
 }

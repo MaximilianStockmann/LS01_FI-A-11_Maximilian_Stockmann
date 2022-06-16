@@ -61,9 +61,13 @@ public class Game {
         spaceshipList.add(romulanShip);
     }
 
-    /**********************************************
+    /*+++++++++++++++++++++++++++++++++++++++++++++
      SINGLETON INSTANCE RETURN
-     **********************************************/
+     ++++++++++++++++++++++++++++++++++++++++++++*/
+
+    /**
+     * @return Singleton instance of the game Class
+     */
     public static synchronized Game instance() {
         if (game == null)
             game = new Game();
@@ -71,36 +75,31 @@ public class Game {
         return game;
     }
 
-    /**********************************************
-     MAIN METHOD
-     **********************************************/
+    /*+++++++++++++++++++++++++++++++++++++++++++++
+     MAIN CONTROL METHODS
+     ++++++++++++++++++++++++++++++++++++++++++++*/
     public static void main(String[] args) {
         game = Game.instance();
-        Grid gameGrid = Grid.instance();
-
-        /*
-        SpaceObject test = gameGrid.test(game.SpaceshipList.get(0));
-
-        if (test.getClass() == Spaceship.class)
-            test.printStatus();
-        */
 
         //main game loop
         while (true) {
             game.menu();
-
-            //game.currentSelection.firePhaserCannon(game.SpaceshipList.get(0));
         }
     }
 
-    /**********************************************
+    public static void endGame() {
+        System.out.println("All ships have been destroyed! Game over!");
+        System.exit(0);
+    }
+
+    /*+++++++++++++++++++++++++++++++++++++++++++++
      MENU METHODS
-     *********************************************/
+     ++++++++++++++++++++++++++++++++++++++++++++*/
     private void menu(){
-        game.currentSpaceshipSelection = game.chooseSpaceship("\nPlease select ship from list by choosing it's number:");
+        Game.instance().currentSpaceshipSelection = Game.instance().chooseSpaceship("\nPlease select ship from list by choosing it's number:");
         System.out.print(ANSI_RESET);
 
-        game.chooseSpaceshipAction("What should  the "+ game.currentSpaceshipSelection.getName() + " do?");
+        Game.instance().chooseSpaceshipAction("What should  the "+ Game.instance().currentSpaceshipSelection.getName() + " do?");
         System.out.print(ANSI_RESET);
     }
 
@@ -108,19 +107,29 @@ public class Game {
     public Spaceship chooseSpaceship(String inputPrompt) {
         Spaceship choice;
 
-        //TODO: If all ships are destroyed you can't get out of this menu, add another return
+        boolean gameOverFlag = true;
+        for (Spaceship spaceship : spaceshipList) {
+            if (!spaceship.getDestructionStatus()) {
+                gameOverFlag = false;
+                break;
+            }
+        }
+
+        if (gameOverFlag)
+            endGame();
+
         while (true) {
             System.out.println(ANSI_GREEN + inputPrompt + ANSI_CYAN);
 
-            printSelectionList(game.spaceshipList);
+            printSelectionList(Game.instance().spaceshipList);
 
             System.out.print(ANSI_GREEN);
 
             System.out.print("\n> ");
 
-            int shipChoice = game.mainInput.nextInt();
+            int shipChoice = Game.instance().mainInput.nextInt();
             if (shipChoice >= UI_ARRAY_REP_ADJUSTMENT && shipChoice <= spaceshipList.size()) {
-                choice = game.spaceshipList.get(shipChoice - UI_ARRAY_REP_ADJUSTMENT);
+                choice = Game.instance().spaceshipList.get(shipChoice - UI_ARRAY_REP_ADJUSTMENT);
 
                 if (!choice.getDestructionStatus()) {
                     return choice;
@@ -141,18 +150,14 @@ public class Game {
         while(true) {
             System.out.println(ANSI_GREEN + inputPrompt + ANSI_CYAN);
 
-            //printSelectionList(game.currentSpaceshipSelection.actionList);
-            printActionList();
+            printSelectionList(new ArrayList<Action>(Arrays.asList(Action.values())));
 
             System.out.print(ANSI_GREEN);
-
             System.out.print("\n> ");
+            int actionChoice = Game.instance().mainInput.nextInt();
 
-            int actionChoice = game.mainInput.nextInt();
-
-            String spaceshipActionToTake = Action.values()[actionChoice-UI_ARRAY_REP_ADJUSTMENT].label;
-
-            Action.valueOfLabel(spaceshipActionToTake).executeAction(game.currentSpaceshipSelection);
+            Action spaceshipActionToTake = Action.values()[actionChoice-UI_ARRAY_REP_ADJUSTMENT];
+            spaceshipActionToTake.executeAction(Game.instance().currentSpaceshipSelection);
         }
     }
 
@@ -166,11 +171,12 @@ public class Game {
 
     //TODO: There's still weirdness with the buffer here, fix
     public void cont() {
+        System.out.println(Console.ANSI_RESET.ansiColorCode);
         System.out.print("Press enter to continue.");
 
-        String readString = game.mainInput.nextLine();
+        String readString = Game.instance().mainInput.nextLine();
         while(readString!=null) {
-            if (game.mainInput.hasNextLine()) {
+            if (Game.instance().mainInput.hasNextLine()) {
                 break;
             } else {
                 readString = null;
@@ -182,19 +188,12 @@ public class Game {
      * @description Prints a numbered version of the parameter list into the console
      * @param list List of Arbitrary Objects, handled internally as Strings, make sure {@link String#toString()}
      *             method of list objects is overriden.
-     * @param <T>
+     * @param <T> Type of Element in the ArrayList
      */
     private <T> void printSelectionList(ArrayList<T> list) {
         for (T currentElement : list) {
             System.out.print(list.indexOf(currentElement) + UI_ARRAY_REP_ADJUSTMENT + " ");
             System.out.println(currentElement);
-        }
-    }
-
-    private void printActionList() {
-        for (Action action : Action.values()){
-            System.out.print(action.ordinal()+UI_ARRAY_REP_ADJUSTMENT + " ");
-            System.out.println(action.label);
         }
     }
 
@@ -220,16 +219,5 @@ public class Game {
         }
 
     }
-
-//How to do this?
-/*    private <T> T choose(ArrayList<T> choices, T result) {
-        if (choices.get(0) == Spaceship.class)
-            chooseShip("\nPlease select ship from list by choosing it's number:");
-        else if (choices.get(0) == String.class) {
-
-        }
-
-        return result;
-    }*/
 
 }
