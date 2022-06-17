@@ -331,7 +331,7 @@ public class Spaceship extends SpaceObject {
             }
         }
 
-        this.freightIndex = newFreightIndex;
+        this.setFreightIndex(newFreightIndex);
 
         this.getFreightIndex().removeIf(freight -> freight.getAmount() == 0);
     }
