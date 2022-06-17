@@ -21,26 +21,41 @@ public class Game {
     private Spaceship currentSpaceshipSelection;
     private final ArrayList<Spaceship> spaceshipList;
 
-    /**********************************************
+    private boolean returnToShipSelection;
+
+    /*+++++++++++++++++++++++++++++++++++++++++++++
      GETTERS
-     **********************************************/
+     ++++++++++++++++++++++++++++++++++++++++++++*/
     public Spaceship getCurrentSpaceshipSelection() {
         return currentSpaceshipSelection;
+    }
+
+    public boolean isReturnToShipSelection() {
+        return returnToShipSelection;
+    }
+
+    /*+++++++++++++++++++++++++++++++++++++++++++++
+     SETTERS
+     ++++++++++++++++++++++++++++++++++++++++++++*/
+
+    public void setCurrentSpaceshipSelection(Spaceship currentSpaceshipSelection) {
+        this.currentSpaceshipSelection = currentSpaceshipSelection;
+    }
+
+    public void setReturnToShipSelection(boolean returnToShipSelection) {
+        this.returnToShipSelection = returnToShipSelection;
     }
 
     public Scanner getMainInput() {
         return mainInput;
     }
 
-    /**********************************************
+    /*+++++++++++++++++++++++++++++++++++++++++++++
      CONSTRUCTOR
-     **********************************************/
+     ++++++++++++++++++++++++++++++++++++++++++++*/
     private Game() {
         mainInput = new Scanner(System.in);
         spaceshipList = new ArrayList<>();
-
-        //Spaceship enterprise = new Spaceship("Enterprise", 100, 100, 100);
-        //Spaceship borg = new Spaceship("Borg", 100, 150, 250);
 
         Spaceship klingonShip = new Spaceship("ISK Hegh'ta", 100, 100,
                 100, 100, 2);
@@ -96,10 +111,19 @@ public class Game {
      MENU METHODS
      ++++++++++++++++++++++++++++++++++++++++++++*/
     private void menu(){
-        Game.instance().currentSpaceshipSelection = Game.instance().chooseSpaceship("\nPlease select ship from list by choosing it's number:");
+        //TODO:Add a way to add ships here instead of just selecting one
+        //TODO: Game doesn't return to ship selection after action was taken, fix
+        Game.instance().setCurrentSpaceshipSelection(
+                Game.instance().chooseSpaceship("\nPlease select ship from list by choosing it's number:"));
+
+        Game.instance().setReturnToShipSelection(false);
+
         System.out.print(ANSI_RESET);
 
-        Game.instance().chooseSpaceshipAction("What should  the "+ Game.instance().currentSpaceshipSelection.getName() + " do?");
+        Game.instance().chooseSpaceshipAction("What should  the "+ Game.instance()
+                .getCurrentSpaceshipSelection()
+                .getName() + " do?");
+
         System.out.print(ANSI_RESET);
     }
 
@@ -107,6 +131,7 @@ public class Game {
     public Spaceship chooseSpaceship(String inputPrompt) {
         Spaceship choice;
 
+        //TODO: Put this logic elsewhere, immedeately after ship gets destroyed
         boolean gameOverFlag = true;
         for (Spaceship spaceship : spaceshipList) {
             if (!spaceship.getDestructionStatus()) {
@@ -150,24 +175,19 @@ public class Game {
         while(true) {
             System.out.println(ANSI_GREEN + inputPrompt + ANSI_CYAN);
 
-            printSelectionList(new ArrayList<Action>(Arrays.asList(Action.values())));
+            printSelectionList(new ArrayList<>(Arrays.asList(Action.values())));
 
             System.out.print(ANSI_GREEN);
             System.out.print("\n> ");
             int actionChoice = Game.instance().mainInput.nextInt();
 
             Action spaceshipActionToTake = Action.values()[actionChoice-UI_ARRAY_REP_ADJUSTMENT];
-            spaceshipActionToTake.executeAction(Game.instance().currentSpaceshipSelection);
+            spaceshipActionToTake.executeAction(Game.instance().getCurrentSpaceshipSelection());
+
+            if (Game.instance().isReturnToShipSelection())
+                return;
         }
     }
-
-//    private void printMenuOptions(ArrayList options) {
-//        System.out.println(ANSI_GREEN + inputPrompt + ANSI_CYAN);
-//        for (String choice : game.currentSpaceshipSelection.actionList) {
-//            System.out.print(game.currentSpaceshipSelection.actionList.indexOf(choice) + UI_ARRAY_REP_ADJUSTMENT + " ");
-//            System.out.println(choice);
-//        }
-//    }
 
     //TODO: There's still weirdness with the buffer here, fix
     public void cont() {

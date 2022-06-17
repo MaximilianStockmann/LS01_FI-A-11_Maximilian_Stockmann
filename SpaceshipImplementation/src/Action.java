@@ -46,6 +46,7 @@ public enum Action {
             spaceship.firePhotonTorpedo(target);
 
             Game.instance().cont();
+        //TODO: Change this to "manage freight" and add more options as a submenu
         } else if (this == Action.LOAD_CARGO) {
             System.out.print("Please specify cargo to load (\"cancel\" to cancel): ");
             Game.instance().getMainInput().nextLine();
@@ -130,6 +131,7 @@ public enum Action {
 
         } else if (this == Action.CANCEL) {
             System.out.println("Returning to ship selection.");
+            Game.instance().setReturnToShipSelection(true);
         } else { //Have to model this in chooseSpaceshipAction in Game class
             System.out.println("Not a valid option! Please choose again.");
         }

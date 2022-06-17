@@ -7,9 +7,9 @@ import java.util.Locale;
  * adding them to a provided list.
  */
 public class Spaceship extends SpaceObject {
-    /**********************************************
+    /*+++++++++++++++++++++++++++++++++++++++++++++
      MEMBER VARIABLES
-     **********************************************/
+     ++++++++++++++++++++++++++++++++++++++++++++*/
     public static ArrayList<String> broadcastCommunicator;
 
     private String name;
@@ -29,9 +29,9 @@ public class Spaceship extends SpaceObject {
         broadcastCommunicator = new ArrayList<>();
     }
 
-    /**********************************************
+    /*+++++++++++++++++++++++++++++++++++++++++++++
      CONSTRUCTORS
-     **********************************************/
+     ++++++++++++++++++++++++++++++++++++++++++++*/
     /**
      * @description Empty Spaceship constructor
      */
@@ -100,9 +100,9 @@ public class Spaceship extends SpaceObject {
         return getName();
     }
 
-    /**********************************************
+    /*+++++++++++++++++++++++++++++++++++++++++++++
      GETTERS
-     **********************************************/
+     ++++++++++++++++++++++++++++++++++++++++++++*/
     public String getName() {
         return name;
     }
@@ -146,9 +146,9 @@ public class Spaceship extends SpaceObject {
         return isDestroyed;
     }
 
-    /**********************************************
+    /*+++++++++++++++++++++++++++++++++++++++++++++
      SETTERS
-     **********************************************/
+     ++++++++++++++++++++++++++++++++++++++++++++*/
     public void setName(String name) {
         this.name = name;
     }
@@ -177,12 +177,12 @@ public class Spaceship extends SpaceObject {
         this.isDestroyed = isDestroyed;
     }
 
-    /**********************************************
+    /*+++++++++++++++++++++++++++++++++++++++++++++
      METHODS
-     **********************************************/
-    /************************
+     ++++++++++++++++++++++++++++++++++++++++++++*/
+    /*+++++++++++++++++++++++
      FIGHTING
-     ************************/
+     +++++++++++++++++++++++*/
     //TODO: Make sure this can only be called if photon torpedos are loaded
     public void firePhotonTorpedo(Spaceship target) {
         if (photonTorpedosLoaded < 0) {
@@ -286,9 +286,9 @@ public class Spaceship extends SpaceObject {
         }
     }
 
-    /************************
+    /*+++++++++++++++++++++++
      MESSAGING
-     ************************/
+     +++++++++++++++++++++++*/
 
     //TODO: Should the broadcast communicator keep track of which ship sent the message?
     public void broadcastMessage(String message) {
@@ -303,21 +303,37 @@ public class Spaceship extends SpaceObject {
         return broadcastCommunicator;
     }
 
-    /************************
+    /*+++++++++++++++++++++++
      UTILITY
-     ************************/
+     +++++++++++++++++++++++*/
 
     public void addFreight (Freight newFreight) {
         freightIndex.add(newFreight);
     }
 
-    //TODO: Add functionality to merge different freights of the same type
+    //TODO: Bring this to lower time complexity
     public void cleanFreightIndex() {
-        freightIndex.removeIf(freight -> freight.getAmount() == 0);
+        ArrayList<Freight> newFreightIndex = new ArrayList<>();
 
-        for (Freight freight : freightIndex) {
+        for (Freight freight : this.getFreightIndex()) {
+            int sumOfOldFreight = 0;
+            boolean containsElementAlready =
+                    newFreightIndex.stream().anyMatch(o -> o.getItemName().equals(freight.getItemName()));
 
+            if(!containsElementAlready) {
+                for (Freight oldFreight : this.getFreightIndex()) {
+                    if (oldFreight.getItemName().equals(freight.getItemName())) {
+                        sumOfOldFreight += oldFreight.getAmount();
+                    }
+                }
+
+                newFreightIndex.add(new Freight(freight.getItemName(), sumOfOldFreight));
+            }
         }
+
+        this.freightIndex = newFreightIndex;
+
+        this.getFreightIndex().removeIf(freight -> freight.getAmount() == 0);
     }
 
     public void useRepairAndroids(ShipStructure[] shipStructures, int androidAmountToUse) {
@@ -337,7 +353,6 @@ public class Spaceship extends SpaceObject {
             }
         }
 
-        //TODO: Account for negative values, 0, maybe use Math.abs()
         repairedAmount = (int) Math.abs((random_number * androidAmountToUse) / amountOfStructuresToRepair);
 
         System.out.println(Console.ANSI_RESET.ansiColorCode);
