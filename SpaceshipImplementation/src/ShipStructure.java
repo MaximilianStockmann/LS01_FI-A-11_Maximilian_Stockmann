@@ -4,11 +4,23 @@ public enum ShipStructure {
     HULL("Hull"),
     LIFE_SUPPORT("Life Support");
 
-    public final String label;
-    public boolean toRepair;
+    private final String label;
+    private boolean toBeRepaired;
 
     ShipStructure(String label) {
         this.label = label;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public boolean isToBeRepaired() {
+        return toBeRepaired;
+    }
+
+    public void setToBeRepaired(boolean toBeRepaired) {
+        this.toBeRepaired = toBeRepaired;
     }
 
     public void repair(Spaceship spaceship, int repairedValue) {

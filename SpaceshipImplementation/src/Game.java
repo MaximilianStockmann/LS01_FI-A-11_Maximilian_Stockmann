@@ -131,17 +131,7 @@ public class Game {
     public Spaceship chooseSpaceship(String inputPrompt) {
         Spaceship choice;
 
-        //TODO: Put this logic elsewhere, immedeately after ship gets destroyed
-        boolean gameOverFlag = true;
-        for (Spaceship spaceship : spaceshipList) {
-            if (!spaceship.getDestructionStatus()) {
-                gameOverFlag = false;
-                break;
-            }
-        }
-
-        if (gameOverFlag)
-            endGame();
+        checkGameOverStatus();
 
         while (true) {
             System.out.println(ANSI_GREEN + inputPrompt + ANSI_CYAN);
@@ -156,7 +146,7 @@ public class Game {
             if (shipChoice >= UI_ARRAY_REP_ADJUSTMENT && shipChoice <= spaceshipList.size()) {
                 choice = Game.instance().spaceshipList.get(shipChoice - UI_ARRAY_REP_ADJUSTMENT);
 
-                if (!choice.getDestructionStatus()) {
+                if (choice.isNotDestroyed()) {
                     return choice;
                 } else {
                     System.out.print(ANSI_RESET);
@@ -217,27 +207,18 @@ public class Game {
         }
     }
 
-    private void putColorInConsole(String color) {
-        final String ANSI_RESET = "\u001B[0m";
-        final String ANSI_BLACK = "\u001B[30m";
-        final String ANSI_RED = "\u001B[31m";
-        final String ANSI_GREEN = "\u001B[32m";
-        final String ANSI_YELLOW = "\u001B[33m";
-        final String ANSI_BLUE = "\u001B[34m";
-        final String ANSI_PURPLE = "\u001B[35m";
-        final String ANSI_CYAN = "\u001B[36m";
-        final String ANSI_WHITE = "\u001B[37m";
+    public void checkGameOverStatus() {
+        boolean gameOverFlag = true;
 
-        //Finish this
-        switch (color){
-            case "White" :
-                System.out.println(ANSI_RESET);break;
-            case "Black" :
-                System.out.println(ANSI_BLACK);break;
-            case "Red" :
-                System.out.println(ANSI_RED);break;
+        for (Spaceship spaceship : spaceshipList) {
+            if (spaceship.isNotDestroyed()) {
+                gameOverFlag = false;
+                return;
+            }
         }
 
+        if (gameOverFlag)
+            endGame();
     }
 
 }

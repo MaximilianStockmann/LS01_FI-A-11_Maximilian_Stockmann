@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Locale;
 
 /**
  * @author Maximilian Stockmann
@@ -142,8 +141,8 @@ public class Spaceship extends SpaceObject {
     public ArrayList<Freight> getFreightIndex() {
         return freightIndex;
     }
-    public boolean getDestructionStatus() {
-        return isDestroyed;
+    public boolean isNotDestroyed() {
+        return !isDestroyed;
     }
 
     /*+++++++++++++++++++++++++++++++++++++++++++++
@@ -188,12 +187,12 @@ public class Spaceship extends SpaceObject {
         if (photonTorpedosLoaded < 0) {
             System.out.println("No photon torpedos loaded!");
         } else {
-            target.hitEvent(this, 80, "Photon");
+            target.hitEvent(this, 80, DamageType.PHOTON_TORPEDO);
         }
     }
 
     public void firePhaserCannon(Spaceship target) {
-        target.hitEvent(this, 55, "Phaser");
+        target.hitEvent(this, 55, DamageType.PHASER);
     }
 
     //This still shows bugged behaviour when calling the function multiple times in a row
@@ -253,37 +252,14 @@ public class Spaceship extends SpaceObject {
     Hit Event for Spaceship class. Phaser Damage will apply to shields first, before damaging hull with surplus damage.
     Photon Torpedos immediately damage hull.
      */
-    private void hitEvent(Spaceship hitBy, int damage, String damageType) {
+
+    private void hitEvent(Spaceship hitBy, int damage, DamageType damageType) {
         System.out.println(Console.ANSI_RESET.ansiColorCode);
-        int damageSurplus;
-        if (damageType.equals("Phaser")) {
-            if (shieldsInPercent > 0) {
-                shieldsInPercent -= damage;
-                if (shieldsInPercent < 0) {
-                    damageSurplus = shieldsInPercent;
-                    System.out.println(name+" took "+(damage - damageSurplus)+ " damage to shields! Shield was destroyed!");
-                    shieldsInPercent = 0;
-                    hullInPercent += damageSurplus;
-                    System.out.println(name+" took "+damageSurplus+ " damage to hull!");
-                    System.out.println(hullInPercent +" hull durability remaining!");
-                    if (hullInPercent < 0) {
-                        hullInPercent = 0;
-                        System.out.println("Hull got reduced to 0! "+name+" was destroyed!");
-                        System.out.println(shieldsInPercent +" shield remaining!");
-                    }
-                }
-                System.out.println(name+" took "+damage+ " damage to shields!");
-                System.out.println(shieldsInPercent +" shield remaining!");
-            }
-        } else if (damageType.equals("Photon")) {
-            hullInPercent -= damage;
-            System.out.println(name+" took "+damage+" damage to hull!");
-            if (hullInPercent < 0) {
-                hullInPercent = 0;
-                System.out.println("Hull got reduced to 0! "+name+" was destroyed!");
-                isDestroyed = true;
-            }
-        }
+        damageType.apply(this, damage);
+    }
+
+    private void applyPhaserDamage() {
+
     }
 
     /*+++++++++++++++++++++++
@@ -339,7 +315,6 @@ public class Spaceship extends SpaceObject {
     public void useRepairAndroids(ShipStructure[] shipStructures, int androidAmountToUse) {
         double random_number = Math.random() * 100;
         int amountOfStructuresToRepair = 0;
-        int repairedAmount = 0;
 
         if (androidAmountToUse > this.repairAndroids) {
             androidAmountToUse = this.repairAndroids;
@@ -348,19 +323,19 @@ public class Spaceship extends SpaceObject {
         }
 
         for (ShipStructure shipStructure : shipStructures) {
-            if (shipStructure.toRepair) {
+            if (shipStructure.isToBeRepaired()) {
                 amountOfStructuresToRepair += 1;
             }
         }
 
-        repairedAmount = (int) Math.abs((random_number * androidAmountToUse) / amountOfStructuresToRepair);
+        int repairedAmount = (int) Math.abs((random_number * androidAmountToUse) / amountOfStructuresToRepair);
 
         System.out.println(Console.ANSI_RESET.ansiColorCode);
 
         for (ShipStructure shipStructure : shipStructures) {
-            if (shipStructure.toRepair) {
+            if (shipStructure.isToBeRepaired()) {
                 shipStructure.repair(this, repairedAmount);
-                System.out.println("Repairing " + shipStructure.label);
+                System.out.println("Repairing " + shipStructure.getLabel());
             }
         }
 
@@ -368,8 +343,6 @@ public class Spaceship extends SpaceObject {
 
         Game.instance().cont();
     }
-
-
 
     @Override
     public void printStatus() {
