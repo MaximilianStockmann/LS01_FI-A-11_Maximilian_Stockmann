@@ -6,15 +6,6 @@ import java.util.*;
 
 public class Game {
     private final int UI_ARRAY_REP_ADJUSTMENT = 1;
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_BLACK = "\u001B[30m";
-    public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_YELLOW = "\u001B[33m";
-    public static final String ANSI_BLUE = "\u001B[34m";
-    public static final String ANSI_PURPLE = "\u001B[35m";
-    public static final String ANSI_CYAN = "\u001B[36m";
-    public static final String ANSI_WHITE = "\u001B[37m";
 
     private static Game game = null;
 
@@ -105,7 +96,7 @@ public class Game {
     }
 
     public static void endGame() {
-        System.out.println("All ships have been destroyed! MainLogic.Game over!");
+        System.out.println("All ships have been destroyed! Game over!");
         System.exit(0);
     }
 
@@ -114,33 +105,31 @@ public class Game {
      ++++++++++++++++++++++++++++++++++++++++++++*/
     private void menu(){
         //TODO:Add a way to add ships here instead of just selecting one
-        //TODO: MainLogic.Game doesn't return to ship selection after action was taken, fix
+        //TODO: Game doesn't return to ship selection after action was taken, fix
         Game.instance().setCurrentSpaceshipSelection(
                 Game.instance().chooseSpaceship("\nPlease select ship from list by choosing it's number:"));
 
-        Game.instance().setReturnToShipSelection(false);
-
-        System.out.print(ANSI_RESET);
+        System.out.print(Console.ANSI_RESET.ansiColorCode);
 
         Game.instance().chooseSpaceshipAction("What should  the "+ Game.instance()
                 .getCurrentSpaceshipSelection()
                 .getName() + " do?");
 
-        System.out.print(ANSI_RESET);
+        System.out.print(Console.ANSI_RESET.ansiColorCode);
     }
 
     //TODO: Refactor chooseSpaceship() and chooseSpaceshipAction() into generalized choice interface
     public Spaceship chooseSpaceship(String inputPrompt) {
-        Spaceship choice;
-
-        checkGameOverStatus();
-
         while (true) {
-            System.out.println(ANSI_GREEN + inputPrompt + ANSI_CYAN);
+            Spaceship choice;
+
+            checkGameOverStatus();
+
+            System.out.println(Console.ANSI_GREEN.ansiColorCode + inputPrompt + Console.ANSI_CYAN.ansiColorCode);
 
             printSelectionList(Game.instance().spaceshipList);
 
-            System.out.print(ANSI_GREEN);
+            System.out.print(Console.ANSI_GREEN.ansiColorCode);
 
             System.out.print("\n> ");
 
@@ -151,34 +140,34 @@ public class Game {
                 if (choice.isNotDestroyed()) {
                     return choice;
                 } else {
-                    System.out.print(ANSI_RESET);
+                    System.out.print(Console.ANSI_RESET.ansiColorCode);
                     System.out.println(choice.getName()+" has been destroyed! Please choose another ship.");
                 }
 
             } else {
-                System.out.print(ANSI_RESET);
+                System.out.print(Console.ANSI_RESET.ansiColorCode);
                 System.out.println("Not a valid option! Please choose again.");
             }
+
         }
     }
 
     //This behaviour needs to interface with the actionList of the MainLogic.Spaceship class somehow
     private void chooseSpaceshipAction(String inputPrompt) {
-        while(true) {
-            System.out.println(ANSI_GREEN + inputPrompt + ANSI_CYAN);
+        do {
+            System.out.println(Console.ANSI_GREEN.ansiColorCode + inputPrompt + Console.ANSI_CYAN.ansiColorCode);
 
             printSelectionList(new ArrayList<>(Arrays.asList(Action.values())));
 
-            System.out.print(ANSI_GREEN);
+            System.out.print(Console.ANSI_GREEN.ansiColorCode);
             System.out.print("\n> ");
             int actionChoice = Game.instance().mainInput.nextInt();
 
             Action spaceshipActionToTake = Action.values()[actionChoice-UI_ARRAY_REP_ADJUSTMENT];
             spaceshipActionToTake.executeAction(Game.instance().getCurrentSpaceshipSelection());
 
-            if (Game.instance().isReturnToShipSelection())
-                return;
-        }
+            Game.instance().setReturnToShipSelection(true);
+        } while(!Game.instance().isReturnToShipSelection());
     }
 
     //TODO: There's still weirdness with the buffer here, fix
@@ -199,7 +188,7 @@ public class Game {
     /**
      * @description Prints a numbered version of the parameter list into the console
      * @param list List of Arbitrary Objects, handled internally as Strings, make sure {@link String#toString()}
-     *             method of list objects is overriden.
+     *             method of list objects is overridden.
      * @param <T> Type of Element in the ArrayList
      */
     private <T> void printSelectionList(ArrayList<T> list) {
@@ -210,17 +199,11 @@ public class Game {
     }
 
     public void checkGameOverStatus() {
-        boolean gameOverFlag = true;
-
         for (Spaceship spaceship : spaceshipList) {
             if (spaceship.isNotDestroyed()) {
-                gameOverFlag = false;
                 return;
             }
         }
-
-        if (gameOverFlag)
-            endGame();
+        endGame();
     }
-
 }

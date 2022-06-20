@@ -65,6 +65,7 @@ public enum DamageType {
         if (hull > damageValue) {
             hull -= damageValue;
         } else if (hull < damageValue) {
+            System.out.println(name + " took " + hull + " damage to hull!");
             System.out.println("Hull got reduced to 0! "+ spaceship.getName() +" was destroyed!");
             hull = 0;
             spaceship.setDestructionStatus(true);
