@@ -1,3 +1,5 @@
+package MainLogic;
+
 import java.util.*;
 
 //TODO: ADD GAME GRID
@@ -103,7 +105,7 @@ public class Game {
     }
 
     public static void endGame() {
-        System.out.println("All ships have been destroyed! Game over!");
+        System.out.println("All ships have been destroyed! MainLogic.Game over!");
         System.exit(0);
     }
 
@@ -112,7 +114,7 @@ public class Game {
      ++++++++++++++++++++++++++++++++++++++++++++*/
     private void menu(){
         //TODO:Add a way to add ships here instead of just selecting one
-        //TODO: Game doesn't return to ship selection after action was taken, fix
+        //TODO: MainLogic.Game doesn't return to ship selection after action was taken, fix
         Game.instance().setCurrentSpaceshipSelection(
                 Game.instance().chooseSpaceship("\nPlease select ship from list by choosing it's number:"));
 
@@ -160,7 +162,7 @@ public class Game {
         }
     }
 
-    //This behaviour needs to interface with the actionList of the Spaceship class somehow
+    //This behaviour needs to interface with the actionList of the MainLogic.Spaceship class somehow
     private void chooseSpaceshipAction(String inputPrompt) {
         while(true) {
             System.out.println(ANSI_GREEN + inputPrompt + ANSI_CYAN);

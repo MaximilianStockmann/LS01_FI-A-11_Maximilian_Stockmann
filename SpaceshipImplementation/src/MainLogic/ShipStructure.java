@@ -1,3 +1,5 @@
+package MainLogic;
+
 public enum ShipStructure {
     ENERGY("Energy"),
     SHIELDS("Shields"),

@@ -1,3 +1,5 @@
+package MainLogic;
+
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -6,7 +8,7 @@ public enum Action {
     SHOOT_PHASER("Shoot Phaser"),
     SHOOT_PHOTON_TORPEDO("Shoot Photon Torpedo"),
     LOAD_CARGO("Load Cargo"),
-    CLEAN_FREIGHT_INDEX("Clean Freight Index"),
+    CLEAN_FREIGHT_INDEX("Clean MainLogic.Freight Index"),
     PRINT_STATUS("Print Status"),
     LOAD_PHOTON_TORPEDO("Load Photon Torpedo"),
     USE_REPAIR_ANDROIDS("Use Repair Androids"),
@@ -34,7 +36,7 @@ public enum Action {
     }
 
     /**
-     * @description Checks for the type of Action and executes the corresponding action
+     * @description Checks for the type of MainLogic.Action and executes the corresponding action
      * @param spaceship {@link Spaceship} object to execute the action on
      */
     public void executeAction(Spaceship spaceship) {
@@ -58,7 +60,7 @@ public enum Action {
             printLogbook();
         } else if (this == Action.CANCEL) {
             cancel();
-        } else { //Have to model this in chooseSpaceshipAction in Game class
+        } else { //Have to model this in chooseSpaceshipAction in MainLogic.Game class
             System.out.println("Not a valid option! Please choose again.");
         }
     }
@@ -113,7 +115,7 @@ public enum Action {
     public void cleanFreightIndex(Spaceship spaceship) {
         spaceship.cleanFreightIndex();
         System.out.println(Console.ANSI_RESET.ansiColorCode);
-        System.out.println("Freight Index has been cleaned.\n");
+        System.out.println("MainLogic.Freight Index has been cleaned.\n");
     }
 
     public void printStatus(Spaceship spaceship) {

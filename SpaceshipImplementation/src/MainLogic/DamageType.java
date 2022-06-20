@@ -1,3 +1,5 @@
+package MainLogic;
+
 public enum DamageType {
     PHASER("Phaser"),
     PHOTON_TORPEDO("Photon Torpedo");

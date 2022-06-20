@@ -1,3 +1,5 @@
+package MainLogic;
+
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -28,10 +30,10 @@ public class Freight {
     }
 
     /**
-     * @description Auxiliary function to filter List of Freight objects for specific item name
+     * @description Auxiliary function to filter List of MainLogic.Freight objects for specific item name
      * @param itemNameOfFreightToFind String containing the item name to filter for
-     * @param freightList List of Freight objects to look in
-     * @param results Method saves all filtered Freight objects in this list
+     * @param freightList List of MainLogic.Freight objects to look in
+     * @param results Method saves all filtered MainLogic.Freight objects in this list
      */
     public static void findFreightInFreightList(String itemNameOfFreightToFind, ArrayList<Freight> freightList,
                                                 ArrayList<Freight> results) {

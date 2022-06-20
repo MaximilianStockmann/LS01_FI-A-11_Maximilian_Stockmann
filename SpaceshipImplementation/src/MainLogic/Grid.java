@@ -1,3 +1,5 @@
+package MainLogic;
+
 public class Grid {
     private static Grid gridInstance = null;
     private int xDim;

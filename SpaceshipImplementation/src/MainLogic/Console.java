@@ -1,3 +1,5 @@
+package MainLogic;
+
 import java.io.IOException;
 
 public enum Console {
