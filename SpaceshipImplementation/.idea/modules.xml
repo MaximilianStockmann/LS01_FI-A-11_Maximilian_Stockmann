@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/SpaceshipImplementation.iml" filepath="$PROJECT_DIR$/SpaceshipImplementation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../../../../Program Files/Java/openjfx-18.0.1_osx-x64_bin-sdk/javafx-sdk-18.0.1/lib/lib.iml" filepath="$PROJECT_DIR$/../../../../../Program Files/Java/openjfx-18.0.1_osx-x64_bin-sdk/javafx-sdk-18.0.1/lib/lib.iml" />
     </modules>
   </component>
 </project>

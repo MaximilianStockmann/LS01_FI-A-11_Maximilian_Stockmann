@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="SpaceshipImplementation:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/SpaceshipImplementation_jar</output-path>
+    <root id="archive" name="SpaceshipImplementation.jar">
+      <element id="module-output" name="SpaceshipImplementation" />
+    </root>
+  </artifact>
+</component>
