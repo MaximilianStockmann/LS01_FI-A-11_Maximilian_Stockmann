@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 //To add Actions add them as a member here and then add according entry in the executeAction method
+//TODO: Build submenus for fighting, cargo management and comms
 public enum Action {
     SHOOT_PHASER("Shoot Phaser"),
     SHOOT_PHOTON_TORPEDO("Shoot Photon Torpedo"),
@@ -104,7 +105,7 @@ public enum Action {
             return;
         }
 
-        spaceship.addFreight(new Freight(itemName, amount));
+        spaceship.addFreight(new FreightImp(itemName, amount));
 
         System.out.println(Console.ANSI_RESET.ansiColorCode);
         System.out.println(amount+" "+ itemName +" have been loaded successfully.");

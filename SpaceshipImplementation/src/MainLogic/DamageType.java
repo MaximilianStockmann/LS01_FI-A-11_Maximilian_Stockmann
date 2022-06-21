@@ -63,6 +63,7 @@ public enum DamageType {
         int hull = spaceship.getHullInPercent();
 
         if (hull > damageValue) {
+            System.out.println(name + " took " + damageValue + " damage to hull!");
             hull -= damageValue;
         } else if (hull < damageValue) {
             System.out.println(name + " took " + hull + " damage to hull!");

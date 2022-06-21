@@ -29,6 +29,8 @@ public enum Console {
         return null;
     }
 
+    //Non-functional attempt to clear console
+/*
     public static void clearConsole() {
         try {
             if (System.getProperty("os.name").contains("Windows")) {
@@ -38,5 +40,5 @@ public enum Console {
                 System.out.print("\033\143");
             }
         } catch (IOException | InterruptedException ex) {}
-    }
+    }*/
 }

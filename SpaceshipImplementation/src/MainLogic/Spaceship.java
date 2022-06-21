@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 /**
  * @author Maximilian Stockmann
- * @description The MainLogic.Spaceship class gives constructors for creating individual objects as well as for
+ * @description The Spaceship class gives constructors for creating individual objects as well as for
  * adding them to a provided list.
  */
 public class Spaceship extends SpaceObject {
@@ -34,7 +34,7 @@ public class Spaceship extends SpaceObject {
      CONSTRUCTORS
      ++++++++++++++++++++++++++++++++++++++++++++*/
     /**
-     * @description Empty MainLogic.Spaceship constructor
+     * @description Empty Spaceship constructor
      */
     public Spaceship() {
         setName("");
@@ -57,7 +57,7 @@ public class Spaceship extends SpaceObject {
     }
 
     /**
-     * @description Simple constructor for MainLogic.Spaceship class
+     * @description Simple constructor for Logic.Spaceship class
      * @param name Name of the spaceship
      * @param energyInPercent Current energy level in %
      * @param shieldsInPercent Current shield strength in %
@@ -120,7 +120,7 @@ public class Spaceship extends SpaceObject {
     }
 
     /**
-     * @description Looks trough all MainLogic.Freight objects on board and adds their amounts together
+     * @description Looks trough all Freight objects on board and adds their amounts together
      * @return Total amount of photon torpedos among all {@link Freight} objects on board
      */
     public int getPhotonTorpedosOnBoard() {
@@ -215,7 +215,7 @@ public class Spaceship extends SpaceObject {
                         largestAmountFreight = freight;
                     }
                 }
-                //Check if one MainLogic.Freight element has enough photon torpedos to satisfy amount,
+                //Check if one Freight element has enough photon torpedos to satisfy amount,
                 //if not take from largest list element
                 if (largestSingleAmount >= photonTorpedosToLoad) {
                     setPhotonTorpedosLoaded(getPhotonTorpedosLoaded()+photonTorpedosToLoad);
@@ -251,17 +251,13 @@ public class Spaceship extends SpaceObject {
     }
 
     /*
-    Hit Event for MainLogic.Spaceship class. Phaser Damage will apply to shields first, before damaging hull with surplus damage.
+    Hit Event for Spaceship class. Phaser Damage will apply to shields first, before damaging hull with surplus damage.
     Photon Torpedos immediately damage hull.
      */
 
     private void hitEvent(Spaceship hitBy, int damage, DamageType damageType) {
         System.out.println(Console.ANSI_RESET.ansiColorCode);
         damageType.apply(this, damage);
-    }
-
-    private void applyPhaserDamage() {
-
     }
 
     /*+++++++++++++++++++++++
@@ -275,7 +271,7 @@ public class Spaceship extends SpaceObject {
 
     /**
      *
-     * @return broadcastCommunicator, static attribute shared over all MainLogic.Spaceship instances
+     * @return broadcastCommunicator, static attribute shared over all Spaceship instances
      */
     public static ArrayList<String> returnBroadcastLog() {
         return broadcastCommunicator;
@@ -305,7 +301,7 @@ public class Spaceship extends SpaceObject {
                     }
                 }
 
-                newFreightIndex.add(new Freight(freight.getItemName(), sumOfOldFreight));
+                Freight.addNewFreightToList(newFreightIndex, freight.getItemName(), sumOfOldFreight);
             }
         }
 
@@ -353,7 +349,7 @@ public class Spaceship extends SpaceObject {
         System.out.println("Current shields: " + shieldsInPercent);
         System.out.println("Current hull: " + hullInPercent);
         System.out.println("Current life support: " + lifeSupportInPercent);
-        System.out.println("Current number of photon torpedos in MainLogic.Freight: " + getPhotonTorpedosOnBoard());
+        System.out.println("Current number of photon torpedos in Freight: " + getPhotonTorpedosOnBoard());
         if (getPhotonTorpedosLoaded() > 0) {
             System.out.println("There are currently " + getPhotonTorpedosLoaded() + " Photon Torpedos loaded!");
         } else {
@@ -361,7 +357,7 @@ public class Spaceship extends SpaceObject {
         }
         System.out.println("Current repair androids on board: " + repairAndroids);
 
-        System.out.println("\nCurrent MainLogic.Freight:");
+        System.out.println("\nCurrent Freight:");
         for (Freight freight : freightIndex) {
             System.out.println(freight.getItemName() + ": " + freight.getAmount());
         }

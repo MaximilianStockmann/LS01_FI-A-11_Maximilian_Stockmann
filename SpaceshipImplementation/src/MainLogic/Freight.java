@@ -3,31 +3,14 @@ package MainLogic;
 import java.util.ArrayList;
 import java.util.Locale;
 
-//TODO: Add functionality for this to save items as objects instead of strings
-public class Freight {
-    private String itemName;
-    private int amount;
-
-    Freight(String itemName, int amount) {
-        this.itemName = itemName;
-        this.amount = amount;
-    }
-
-    public String getItemName() {
-        return itemName;
-    }
-
-    public int getAmount() {
-        return amount;
-    }
-
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
-    }
+/**
+ * @description Handles Freights and Collections of Freights
+ */
+public interface Freight {
+    String getItemName();
+    int getAmount();
+    void setItemName(String itemName);
+    void setAmount(int amount);
 
     /**
      * @description Auxiliary function to filter List of MainLogic.Freight objects for specific item name
@@ -35,7 +18,7 @@ public class Freight {
      * @param freightList List of MainLogic.Freight objects to look in
      * @param results Method saves all filtered MainLogic.Freight objects in this list
      */
-    public static void findFreightInFreightList(String itemNameOfFreightToFind, ArrayList<Freight> freightList,
+    static void findFreightInFreightList(String itemNameOfFreightToFind, ArrayList<Freight> freightList,
                                                 ArrayList<Freight> results) {
         for (Freight freightListEntry : freightList) {
             if (freightListEntry.getItemName().toLowerCase(Locale.ROOT).equals(itemNameOfFreightToFind.toLowerCase(Locale.ROOT))) {
@@ -44,8 +27,11 @@ public class Freight {
         }
     }
 
-    @Override
-    public String toString() {
-        return getItemName();
+    //TODO: Decouple this properly, this method should be in FreightImp. How to solve this?
+    static void addNewFreightToList(ArrayList<Freight> list, String itemName, int amount) {
+        list.add(new FreightImp(itemName, amount));
     }
+
+    @Override
+    String toString();
 }

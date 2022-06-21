@@ -56,14 +56,14 @@ public class Game {
         Spaceship romulanShip = new Spaceship("IRW Khazara", 70, 76,
                 80, 100, 7);
 
-        klingonShip.addFreight(new Freight("Ferengi snail juice", 200));
-        klingonShip.addFreight(new Freight("Bat'leth klingon sword", 200));
+        klingonShip.addFreight(new FreightImp("Ferengi snail juice", 200));
+        klingonShip.addFreight(new FreightImp("Bat'leth klingon sword", 200));
 
-        romulanShip.addFreight(new Freight("Borg scrap", 5));
-        romulanShip.addFreight(new Freight("Red matter", 2));
-        romulanShip.addFreight(new Freight("Plasma weapon", 50));
-        romulanShip.addFreight(new Freight("Photon Torpedos", 2));
-        romulanShip.addFreight(new Freight("Photon Torpedos", 3));
+        romulanShip.addFreight(new FreightImp("Borg scrap", 5));
+        romulanShip.addFreight(new FreightImp("Red matter", 2));
+        romulanShip.addFreight(new FreightImp("Plasma weapon", 50));
+        romulanShip.addFreight(new FreightImp("Photon Torpedos", 2));
+        romulanShip.addFreight(new FreightImp("Photon Torpedos", 3));
 
         spaceshipList.add(klingonShip);
         spaceshipList.add(romulanShip);
@@ -155,6 +155,7 @@ public class Game {
     //This behaviour needs to interface with the actionList of the MainLogic.Spaceship class somehow
     private void chooseSpaceshipAction(String inputPrompt) {
         do {
+            Game.instance().setReturnToShipSelection(false);
             System.out.println(Console.ANSI_GREEN.ansiColorCode + inputPrompt + Console.ANSI_CYAN.ansiColorCode);
 
             printSelectionList(new ArrayList<>(Arrays.asList(Action.values())));
@@ -165,8 +166,6 @@ public class Game {
 
             Action spaceshipActionToTake = Action.values()[actionChoice-UI_ARRAY_REP_ADJUSTMENT];
             spaceshipActionToTake.executeAction(Game.instance().getCurrentSpaceshipSelection());
-
-            Game.instance().setReturnToShipSelection(true);
         } while(!Game.instance().isReturnToShipSelection());
     }
 
