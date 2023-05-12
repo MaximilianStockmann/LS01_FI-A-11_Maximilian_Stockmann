@@ -15,8 +15,11 @@ public class Table<T> {
 
     public void fillTable(ArrayList<T> objectArray) {
         for (T object : objectArray) {
-            if (object.getClass().toString().equals((new Schueler()).toString())) {
-                table.add()
+            if (object instanceof Schueler) {
+                ArrayList<TableEntry<T>> row = new ArrayList<TableEntry<T>>();
+
+
+                table.add(row);
             }
         }
     }
