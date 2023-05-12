@@ -8,7 +8,7 @@ public class FreightImp implements Freight {
     private String itemName;
     private int amount;
 
-    FreightImp(String itemName, int amount) {
+    public FreightImp(String itemName, int amount) {
         this.itemName = itemName;
         this.amount = amount;
     }

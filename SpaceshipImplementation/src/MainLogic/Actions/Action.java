@@ -1,4 +1,6 @@
-package MainLogic;
+package MainLogic.Actions;
+
+import MainLogic.*;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -37,7 +39,7 @@ public enum Action {
     }
 
     /**
-     * @description Checks for the type of MainLogic.Action and executes the corresponding action
+     * @description Checks for the type of MainLogic.Actions.Action and executes the corresponding action
      * @param spaceship {@link Spaceship} object to execute the action on
      */
     public void executeAction(Spaceship spaceship) {
@@ -67,10 +69,14 @@ public enum Action {
     }
 
     public void shootPhaser(Spaceship spaceship) {
-        Spaceship target = Game.instance().chooseSpaceship("Please enter target ship to hit with Phaser Cannons: ");
+        if (spaceship.getEnergyInPercent() < 50) {
+            System.out.println("Not enough energy! Need 50% energy to fire phaser.\n Current energy: "
+                    + spaceship.getEnergyInPercent() + "%");
+        } else {
+            Spaceship target = Game.instance().chooseSpaceship("Please enter target ship to hit with Phaser Cannons: ");
 
-        spaceship.firePhaserCannon(target);
-
+            spaceship.firePhaserCannon(target);
+        }
         Game.instance().cont();
     }
 

@@ -194,6 +194,7 @@ public class Spaceship extends SpaceObject {
     }
 
     public void firePhaserCannon(Spaceship target) {
+        setEnergyInPercent(getEnergyInPercent()-50);
         target.hitEvent(this, 55, DamageType.PHASER);
     }
 
